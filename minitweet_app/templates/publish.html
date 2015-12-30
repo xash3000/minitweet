@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+<form method="post">
+    {{ form.hidden_tag() }}
+    {{ form.username(class_="col-xs-12 string-field", placeholder="your name") }}
+    {{ form.post_title(class_="col-xs-12 string-field", placeholder="post title") }}
+    {{ form.textarea(class_="col-xs-12", id="publish", placeholder="your post") }}
+    <input type="submit" name="submit" value="Publish" class="btn btn-default col-xs-4 col-xs-offset-4">
+</form>
+</div>
+
+{% endblock %}

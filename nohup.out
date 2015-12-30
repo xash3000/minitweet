@@ -1,0 +1,5 @@
+Trying location provider `geoclue'...
+Started Geoclue provider `Geoclue Master'.
+Using provider `geoclue'.
+According to the geoclue provider we're at: 15.00, 30.00
+Using method `randr'.

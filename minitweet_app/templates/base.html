@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        {% if title %}
+            <title>{{ title }} - MiniTweet</title>
+        {% else %}
+            <title>MiniTweet</title>
+        {% endif %}
+        
+        <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    </head>
+    <body>
+
+        <nav>
+            <ul>
+                <li class="nav_ele"><h1><a href="{{ url_for('home') }}">MiniTweet</a></h1></li>
+                <li class="nav_ele"><h4><a href="{{ url_for('publish') }}">Publish</a></h4></li>
+            </ul>
+        </nav>
+
+        <!-- child file -->
+        {% block content %}
+        {% endblock %}
+
+        <!-- javascript files -->
+        <script src="{{ url_for('static', filename='jquery-1.11.3.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
+    </body>
+</html>
