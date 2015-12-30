@@ -17,6 +17,8 @@
             <ul>
                 <li class="nav_ele"><h1><a href="{{ url_for('home') }}">MiniTweet</a></h1></li>
                 <li class="nav_ele"><h4><a href="{{ url_for('publish') }}">Publish</a></h4></li>
+                <li class="nav_ele"><h4><a href="{{ url_for('login') }}">Login</a></h4></li>
+                <li class="nav_ele"><h4><a href="{{ url_for('signup') }}">SignUp</a></h4></li>
             </ul>
         </nav>
 
@@ -24,7 +26,7 @@
         {% for msg in get_flashed_messages() %}
             <div class="container">
                 <div class="flash_msg text-center">
-                    <h4>{{ msg }}</h4>
+                    <h2>{{ msg }}</h2>
                 </div>
             </div>
         {% endfor %}
