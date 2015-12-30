@@ -15,9 +15,8 @@ def publish():
     form = Publish()
     if form.validate_on_submit():
         title = form.post_title.data
-        author = form.username.data
         body = form.textarea.data
-        db.session.add(Post(title, author, body))
+        db.session.add(Post(title, body))
         db.session.commit()
         return redirect(url_for("home"))
     return render_template("publish.html", form=form)
