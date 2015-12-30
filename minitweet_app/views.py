@@ -1,5 +1,5 @@
-from flask import render_template, redirect, url_for, request
-from .forms import Publish
+from flask import render_template, redirect, url_for, request, flash
+from .forms import PublishForm
 from . import app, db
 from .models import Post
 
@@ -12,7 +12,7 @@ def home():
 
 @app.route("/publish", methods=["GET", "POST"])
 def publish():
-    form = Publish()
+    form = PublishForm()
     if form.validate_on_submit():
         title = form.post_title.data
         body = form.textarea.data

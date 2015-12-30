@@ -7,7 +7,7 @@
         {% else %}
             <title>MiniTweet</title>
         {% endif %}
-        
+
         <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
     </head>
@@ -19,6 +19,16 @@
                 <li class="nav_ele"><h4><a href="{{ url_for('publish') }}">Publish</a></h4></li>
             </ul>
         </nav>
+
+        <!-- flashed messages -->
+        {% for msg in get_flashed_messages() %}
+            <div class="container">
+                <div class="flash_msg text-center">
+                    <h4>{{ msg }}</h4>
+                </div>
+            </div>
+        {% endfor %}
+
 
         <!-- child file -->
         {% block content %}

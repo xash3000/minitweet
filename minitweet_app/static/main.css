@@ -50,3 +50,13 @@ a{
     height: 30px;
     width: 200px;
 }
+
+.flash_msg{
+    background-color: #3d9de6;
+    height: 40px;
+    padding-top: 2px;
+}
+
+.flash_msg h4{
+    color: #ffffff;
+}
