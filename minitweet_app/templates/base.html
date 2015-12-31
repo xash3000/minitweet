@@ -16,9 +16,13 @@
         <nav>
             <ul>
                 <li class="nav_ele"><h1><a href="{{ url_for('home') }}">MiniTweet</a></h1></li>
-                <li class="nav_ele"><h4><a href="{{ url_for('publish') }}">Publish</a></h4></li>
-                <li class="nav_ele"><h4><a href="{{ url_for('login') }}">Login</a></h4></li>
-                <li class="nav_ele"><h4><a href="{{ url_for('signup') }}">SignUp</a></h4></li>
+                {% if current_user.is_authenticated %}
+                    <li class="nav_ele"><h4><a href="{{ url_for('publish') }}">Publish</a></h4></li>
+                    <li class="nav_ele"><h4><a href="{{ url_for('logout') }}">Logout</a></h4></li>
+                {% else %}
+                    <li class="nav_ele"><h4><a href="{{ url_for('login') }}">Login</a></h4></li>
+                    <li class="nav_ele"><h4><a href="{{ url_for('signup') }}">SignUp</a></h4></li>
+                {% endif %}
             </ul>
         </nav>
 
@@ -26,7 +30,7 @@
         {% for msg in get_flashed_messages() %}
             <div class="container">
                 <div class="flash_msg text-center">
-                    <h2>{{ msg }}</h2>
+                    <h5>{{ msg }}</h5>
                 </div>
             </div>
         {% endfor %}

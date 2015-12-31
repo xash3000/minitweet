@@ -45,7 +45,6 @@ a{
 .sep{
     margin: 0 auto;
     background-image: url("sep.png");
-    /*background-color: rgb(250, 153, 127);*/
     background-repeat: no-repeat;
     height: 30px;
     width: 200px;
@@ -57,6 +56,6 @@ a{
     padding-top: 2px;
 }
 
-.flash_msg h4{
-    color: #ffffff;
+.flash_msg h5{
+    color: #fff;
 }

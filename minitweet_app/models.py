@@ -10,9 +10,10 @@ class Post(db.Model):
     body = db.Column(db.String, nullable=False)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    def __init__(self, title,  body):
+    def __init__(self, title,  body, author_id):
         self.title = title
         self.body = body
+        self.author_id = author_id
 
     def __repr__(self):
         return "<post {}>".format(self.title)
@@ -33,5 +34,17 @@ class User(db.Model):
         self.email = email
         self.password = password
 
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return str(self.id)
+
     def __repr__(self):
-        return '<name {}'.format(self.name)
+        return '<User {}'.format(self.name)
