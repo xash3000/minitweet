@@ -1,4 +1,4 @@
-from . import db
+from . import db, bcrypt
 
 
 class Post(db.Model):
@@ -32,7 +32,8 @@ class User(db.Model):
     def __init__(self, name, email, password):
         self.name = name
         self.email = email
-        self.password = password
+        # Encrypt password
+        self.password = bcrypt.generate_password_hash(password)
 
     def is_authenticated(self):
         return True
