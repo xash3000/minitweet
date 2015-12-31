@@ -35,15 +35,19 @@ class User(db.Model):
         # Encrypt password
         self.password = bcrypt.generate_password_hash(password)
 
+    @property
     def is_authenticated(self):
         return True
 
+    @property
     def is_active(self):
         return True
 
+    @property
     def is_anonymous(self):
         return False
 
+    @property
     def get_id(self):
         return str(self.id)
 
