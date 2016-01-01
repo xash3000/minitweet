@@ -8,7 +8,7 @@ from flask.ext.login import (
 
 # in package import
 from .forms import PublishForm, SignUpForm, LoginForm
-from . import app, db, load_user
+from . import app, db, load_user, bcrypt
 from .models import Post, User
 
 @app.route("/")
@@ -38,11 +38,13 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter(User.name == form.username.data).first()
-        if user and bcrypt.check_password_hash(
-                                    user.password, form.password.data):
-            flash("you were just logged in!")
-            login_user(user)
-            return redirect(url_for("home"))
+        if user:
+            if bcrypt.check_password_hash(user.password, form.password.data):
+                flash("you were just logged in!")
+                login_user(user)
+                return redirect(url_for("home"))
+            else:
+                flash("bad username or password")
         else:
             flash("bad username or password")
     return render_template("login.html", form=form)
@@ -52,14 +54,15 @@ def login():
 def signup():
     form = SignUpForm()
     if form.validate_on_submit():
-        user = User(
+        u = User(
             name=form.username.data,
             email=form.email.data,
             password=form.password.data
         )
-        db.session.add(user)
+        db.session.add(u)
         db.session.commit()
-        login_user(user)
+        u.id = int(u.id)
+        login_user(u)
         return redirect(url_for('home'))
     return render_template("signup.html", form=form)
 
