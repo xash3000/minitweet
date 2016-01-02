@@ -21,6 +21,19 @@ body{
 .navbar a:hover{
     background-color: rgba(0, 0, 0, 0.1) !important;
 }
+
+
+.icon-bar{
+    background-color: #fff !important;
+}
+
+.navbar-toggle:hover{
+    background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.navbar-toggle:focus{
+    background-color: rgba(0, 0, 0, 0.1) !important;
+}
 .post{
 /*
     white-space: pre-wrap;

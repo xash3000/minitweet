@@ -1,0 +1,9 @@
+postgresql reset seq:
+
+Reset the sequence:
+
+    ```SELECT setval('sequence_name', 0);```
+
+Updating current records:
+
+    ```UPDATE foo SET id = DEFAULT;```
