@@ -15,8 +15,14 @@ class BaseConfig(object):
     MAIL_SERVER = "smtp.gmail.com"
     MAIL_PORT = 465
     MAIL_USE_SSL = True
-    MAIL_USERNAME = os.environ["MAIL_USERNAME"]
-    MAIL_PASSWORD = os.environ["MAIL_PASSWORD"]
+    try:
+        MAIL_USERNAME = os.environ["MAIL_USERNAME"]
+    except:
+        MAIL_USERNAME = "alifaki077@gmail.com"
+    try:
+        MAIL_PASSWORD = os.environ["MAIL_PASSWORD"]
+    except:
+        MAIL_PASSWORD = "Aloba077"
 
 
 class DevConfig(BaseConfig):
