@@ -8,9 +8,9 @@ from flask.ext.login import (
 
 # in package import
 from .forms import PublishForm, SignUpForm, LoginForm
-from . import app, db, load_user, bcrypt
+from . import app, db, load_user, bcrypt, mail
 from .models import Post, User
-
+from flask.ext.mail import Message
 @app.route("/")
 @app.route("/posts")
 def home():
@@ -79,3 +79,14 @@ def user_profile(username):
             "user_profile.html",
             user=user,
         )
+
+@app.route("/msg/<m>")
+def msg(m):
+	msg = Message(
+              'Hello',
+	       sender=app.config["MAIL_USERNAME"],
+	       recipients=
+               ['ali-abdualrhman2001@hotmail.com'])
+	msg.body = m
+	mail.send(msg)
+	return "Sent"
