@@ -8,7 +8,7 @@ from flask.ext.login import (
 
 # in package import
 from .forms import PublishForm, SignUpForm, LoginForm
-from . import app, db, load_user, bcrypt, mail
+from . import app, db, load_user, bcrypt
 from .models import Post, User
 
 @app.route("/")
