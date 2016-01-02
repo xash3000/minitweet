@@ -12,19 +12,49 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
     </head>
     <body>
-
-        <nav>
-            <ul>
-                <li class="nav_ele"><h1><a href="{{ url_for('home') }}">MiniTweet</a></h1></li>
-                {% if current_user.is_authenticated %}
-                    <li class="nav_ele"><h4><a href="{{ url_for('publish') }}">Publish</a></h4></li>
-                    <li class="nav_ele"><h4><a href="{{ url_for('logout') }}">Logout</a></h4></li>
-                {% else %}
-                    <li class="nav_ele"><h4><a href="{{ url_for('login') }}">Login</a></h4></li>
-                    <li class="nav_ele"><h4><a href="{{ url_for('signup') }}">SignUp</a></h4></li>
-                {% endif %}
-            </ul>
-        </nav>
+        <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{{ url_for('home') }}"><span>Minitweet<span></a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            {% if current_user.is_authenticated %}
+            <li>
+                <a href="{{ url_for('publish') }}">
+                    <span>Publish</span>
+                </a>
+            </li>
+            {% endif %}
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            {% if current_user.is_authenticated %}
+            <li>
+                <a href="{{ url_for('user_profile', username=current_user.name) }}">
+                    <img class="gravatar-img" src="{{ current_user.email | gravatar(size=20) }}">
+                    <span>{{ current_user.name }}</span>
+                </a>
+            </li>
+              <li><a href="{{ url_for('logout') }}"><span>Logout</span></a></li>
+            {% else %}
+              <li><a href="{{ url_for('signup') }}"><span>Sign up</span></a></li>
+              <li><a href="{{ url_for('login') }}"><span>Login</span></a></li>
+            {% endif %}
+          </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container -->
+    </nav>
 
         <!-- flashed messages -->
         {% for msg in get_flashed_messages() %}

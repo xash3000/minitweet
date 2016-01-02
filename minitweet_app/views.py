@@ -38,15 +38,12 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter(User.name == form.username.data).first()
-        if user:
-            if bcrypt.check_password_hash(user.password, form.password.data):
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
                 flash("you were just logged in!")
                 login_user(user)
                 return redirect(url_for("home"))
-            else:
-                flash("bad username or password")
         else:
-            flash("bad username or password")
+            flash("Invalid username or password")
     return render_template("login.html", form=form)
 
 
