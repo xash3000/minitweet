@@ -3,6 +3,7 @@ bcrypt==2.0.0
 cffi==1.4.2
 Flask==0.10.1
 Flask-Bcrypt==0.7.1
+Flask-Gravatar==0.4.2
 Flask-Login==0.3.2
 Flask-Migrate==1.7.0
 Flask-Script==2.0.5
@@ -14,6 +15,7 @@ Jinja2==2.8
 Mako==1.0.3
 MarkupSafe==0.23
 psycopg2==2.6.1
+py-bcrypt==0.4
 pycparser==2.14
 python-editor==0.5
 six==1.10.0

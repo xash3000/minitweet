@@ -1,5 +1,5 @@
 # flask imports
-from flask import render_template, redirect, url_for, request, flash
+from flask import render_template, redirect, url_for, request, flash, abort
 
 #flask.ext
 from flask.ext.login import (
@@ -73,3 +73,12 @@ def logout():
     logout_user()
     flash("you were just logged out!")
     return redirect(url_for("home"))
+
+
+@app.route("/u/<username>")
+def user_profile(username):
+    user = User.query.filter_by(name=username).first_or_404()
+    return render_template(
+            "user_profile.html",
+            user=user,
+        )

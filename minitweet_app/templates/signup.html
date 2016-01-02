@@ -5,11 +5,11 @@
 <div class="container">
 <form method="post">
     {{ form.hidden_tag() }}
-    {{ form.username(class_="col-xs-12 string-field", placeholder="username") }}
-    {{ form.email(class_="col-xs-12 string-field", placeholder="Email") }}
-    {{ form.password(class_="col-xs-12 string-field", placeholder="Password") }}
-    {{ form.confirm(class_="col-xs-12 string-field", placeholder="enter Password again") }}
-    <input type="submit" name="submit" value="Sign Up" class="btn btn-default col-xs-4 col-xs-offset-4">
+    {{ form.username(class_="col-xs-4 col-xs-offset-4 string-field", placeholder="username") }}
+    {{ form.email(class_="col-xs-4 col-xs-offset-4 string-field", placeholder="Email") }}
+    {{ form.password(class_="col-xs-4 col-xs-offset-4 string-field", placeholder="Password") }}
+    {{ form.confirm(class_="col-xs-4 col-xs-offset-4 string-field", placeholder="enter Password again") }}
+    <input type="submit" name="submit" value="Sign Up" class="btn btn-success col-xs-4 col-xs-offset-4">
 </form>
 
 </div>

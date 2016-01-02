@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<div class="container">
+    <div class="user_info text-center">
+        <div class="gravatar">
+            <img src="{{ user.email | gravatar }}" class="gravatar-img">
+        </div>
+        {%if user.bio%}
+            <div class="user_bio"><h4>{{ bio }}<h4></div>
+        {% endif %}
+    </div>
+
+    <div class="text-center"><h1>My posts</h1><div>
+    <div class="posts">
+        {% for post in user.posts %}
+        <div class="post text-center col-xs-12">
+            <div class="post-title">
+                <h1>{{ post.title }}</h1>
+            </div>
+
+            <div class="post-author">
+                <h6>author: {{ post.author.name }}</h6>
+            </div>
+
+            <div class="post-body col-xs-12">
+                <p>{{ post.body }}</p>
+            </div>
+            <div class="sep"></div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

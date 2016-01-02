@@ -12,7 +12,7 @@ li{
     white-space: -pre-wrap; /* Opera 4-6 */
     white-space: -o-pre-wrap; /* Opera 7 */
     word-wrap: break-word; /* Internet Explorer 5.5+ */
-    line-height: 5px;
+    line-height: 1.5px;
 }
 
 .post .post-body{
@@ -58,4 +58,8 @@ a{
 
 .flash_msg h5{
     color: #fff;
+}
+
+.gravatar-img{
+    border-radius: 100%;
 }
