@@ -30,4 +30,4 @@ class DevConfig(BaseConfig):
 
 
 class ProductionConfig(BaseConfig):
-    DEBUG = False
+    DEBUG = True
