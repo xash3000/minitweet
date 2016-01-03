@@ -10,6 +10,9 @@ body{
     padding-top: 70px;
 }
 
+.hidden{
+    display: none;
+}
 .navbar{
     background-color: #3D9DE6;
 }
@@ -35,12 +38,6 @@ body{
     background-color: rgba(0, 0, 0, 0.1) !important;
 }
 .post{
-/*
-    white-space: pre-wrap;
-    white-space: -moz-pre-wrap;
-    white-space: -pre-wrap;
-    white-space: -o-pre-wrap;
-    word-wrap: break-word;*/
     padding: 10px;
 }
 
@@ -67,18 +64,18 @@ a{
 #publish{
     margin-top: 20px;
     margin-bottom: 20px;
-    height: 200px;
+    height: 150px;
     border: 1px solid #aaaaaa;
     font-size: 25px;
 }
 
 .sep{
     margin: 0 auto;
-    background-image: url("sep.png");
+    background-image: url("../img/sep.png");
     background-repeat: no-repeat;
     height: 30px;
     width: 200px;
-    margin-top: 60px;
+    margin-top: 10px;
 }
 
 .flash_msg{
@@ -98,4 +95,14 @@ a{
 .btn-primary{
     background-color: #3D9DE6 !important;
     border-color: #3D9DE6 !important;
+}
+
+.heart{
+    transition-timing-function: ease-in-out;
+    cursor: pointer;
+    color: #f91600;
+}
+
+.likes-counting{
+    color: #f91600;
 }

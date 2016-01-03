@@ -24,7 +24,7 @@ gravatar = Gravatar(
                     default='retro',
                     force_default=False,
                     force_lower=False,
-                    use_ssl=False,
+                    use_ssl=True,
                     base_url=None
              )
 
@@ -32,6 +32,6 @@ from .models import User
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.filter(User.id == int(user_id)).first()
+    return User.query.filter_by(id= int(user_id)).first()
 
 from . import views

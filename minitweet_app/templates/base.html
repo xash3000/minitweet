@@ -8,8 +8,9 @@
             <title>MiniTweet</title>
         {% endif %}
 
-        <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
     </head>
     <body>
         <!-- Navigation -->
@@ -71,7 +72,8 @@
         {% endblock %}
 
         <!-- javascript files -->
-        <script src="{{ url_for('static', filename='jquery-1.11.3.min.js') }}"></script>
-        <script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/jquery-1.11.3.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
     </body>
 </html>
