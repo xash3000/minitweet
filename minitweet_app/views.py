@@ -40,7 +40,8 @@ def login():
         user = User.query.filter(User.name == form.username.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
                 flash("you were just logged in!")
-                login_user(user)
+                remember = form.remember_me.data
+                login_user(user, remember=remember)
                 return redirect(url_for("home"))
         else:
             flash("Invalid username or password")
@@ -59,7 +60,7 @@ def signup():
         db.session.add(u)
         db.session.commit()
         u.id = int(u.id)
-        login_user(u)
+        login_user(u, remember=True)
         return redirect(url_for('home'))
     return render_template("signup.html", form=form)
 

@@ -1,5 +1,5 @@
 from flask.ext.wtf import Form
-from wtforms import TextAreaField, StringField, PasswordField
+from wtforms import TextAreaField, StringField, PasswordField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 
 
@@ -15,7 +15,7 @@ class PublishForm(Form):
 class LoginForm(Form):
     username = StringField('username', validators=[DataRequired()])
     password = PasswordField('password', validators=[DataRequired()])
-
+    remember_me = BooleanField("remember_me", default=True)
 
 class SignUpForm(Form):
     username = StringField(
