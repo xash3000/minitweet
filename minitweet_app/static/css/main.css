@@ -78,16 +78,6 @@ a{
     margin-top: 10px;
 }
 
-.flash_msg{
-    background-color: #3d9de6;
-    height: 40px;
-    padding-top: 2px;
-}
-
-.flash_msg h5{
-    color: #fff;
-}
-
 .gravatar-img{
     border-radius: 100%;
 }
@@ -109,4 +99,21 @@ a{
 
 .remember_me{
     margin-top: 20px;
+}
+
+.close{
+    color: #fff !important;
+    opacity: 0.5
+}
+
+.close:hover{opacity: 1}
+
+.alert-success{
+    background-color: #23c15d !important;
+    color: #fff;
+}
+
+.alert-danger{
+    background-color: #F04124 !important;
+    color: #fff;
 }

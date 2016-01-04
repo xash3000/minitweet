@@ -58,10 +58,11 @@
     </nav>
 
         <!-- flashed messages -->
-        {% for msg in get_flashed_messages() %}
+        {% for category, msg in get_flashed_messages(with_categories=True) %}
             <div class="container">
-                <div class="flash_msg text-center">
-                    <h5>{{ msg }}</h5>
+                <div class="alert alert-{{ category }} text-center">
+                    <a class="close" title="Close" href="#" data-dismiss="alert">×</a>
+                    <span class="msg">{{ msg }}</span>
                 </div>
             </div>
         {% endfor %}

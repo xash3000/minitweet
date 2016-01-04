@@ -28,7 +28,7 @@ def publish():
         user_id = current_user.id
         db.session.add(Post(title, body, user_id))
         db.session.commit()
-        flash('New entry was successfully posted. Thanks.')
+        flash('New entry was successfully posted. Thanks.', 'success')
         return redirect(url_for("home"))
     else:
         return render_template("publish.html", form=form)
@@ -39,12 +39,12 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter(User.name == form.username.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
-                flash("you were just logged in!")
+                flash("you were just logged in!", 'success')
                 remember = form.remember_me.data
                 login_user(user, remember=remember)
                 return redirect(url_for("home"))
         else:
-            flash("Invalid username or password")
+            flash("Invalid username or password", 'danger')
     return render_template("login.html", form=form)
 
 
@@ -69,7 +69,7 @@ def signup():
 @login_required
 def logout():
     logout_user()
-    flash("you were just logged out!")
+    flash("you were just logged out!", 'success')
     return redirect(url_for("home"))
 
 
