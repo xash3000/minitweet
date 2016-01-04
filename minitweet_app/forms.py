@@ -28,5 +28,5 @@ class SignUpForm(Form):
     )
     password = PasswordField(
         'password',
-        validators=[DataRequired(), Length(min=6, max=25)]
+        validators=[DataRequired(), Length(min=6)]
     )

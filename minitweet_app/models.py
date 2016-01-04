@@ -8,6 +8,7 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
     body = db.Column(db.String, nullable=False)
+    # ForeignKey
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     def __init__(self, title,  body, author_id):
@@ -16,7 +17,8 @@ class Post(db.Model):
         self.author_id = author_id
 
     def __repr__(self):
-        return "<post {}>".format(self.title)
+        # for debugging
+        return "<Post {}>".format(self.title)
 
 
 class User(db.Model):
@@ -27,14 +29,18 @@ class User(db.Model):
     name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
+    # one to many relationship
     posts = db.relationship("Post", backref="author", lazy="dynamic")
 
     def __init__(self, name, email, password):
         self.name = name
         self.email = email
-        # Encrypt password
+        # generate one way hash for password
         self.password = bcrypt.generate_password_hash(password)
 
+    #=========================================#
+    #  Flask-Login extension required methods #
+    #=========================================#
 
     def is_authenticated(self):
         return True
@@ -52,4 +58,5 @@ class User(db.Model):
         return str(self.id)
 
     def __repr__(self):
+        # for debugging
         return '<User {}>'.format(self.name)

@@ -1,3 +1,7 @@
+/*=======================================
++++++++++++++ General Rules +++++++++++++
+=========================================*/
+
 textarea {
     resize: none;
 }
@@ -13,6 +17,19 @@ body{
 .hidden{
     display: none;
 }
+
+a{
+    text-decoration: none !important;
+}
+/*=======================================
+------------- End General Rules ---------
+=========================================*/
+
+
+/*=======================================
++++++++ BootStrap Customization +++++++++
+=========================================*/
+
 .navbar{
     background-color: #3D9DE6;
 }
@@ -37,6 +54,43 @@ body{
 .navbar-toggle:focus{
     background-color: rgba(0, 0, 0, 0.1) !important;
 }
+
+.nav_ele{
+    display: inline-block;
+    padding: 10px;
+}
+
+.close{
+    color: #fff !important;
+    opacity: 0.5
+}
+
+.close:hover{opacity: 1}
+
+.alert-success{
+    background-color: #23c15d !important;
+    color: #fff;
+}
+
+.alert-danger{
+    background-color: #F04124 !important;
+    color: #fff;
+}
+
+.btn-primary{
+    background-color: #3D9DE6 !important;
+    border-color: #3D9DE6 !important;
+}
+
+/*=======================================
+-------- BootStrap Customization --------
+=========================================*/
+
+
+/*=======================================
++++++++ Author Custom Styles +++++++++
+=========================================*/
+
 .post{
     padding: 10px;
 }
@@ -46,14 +100,7 @@ body{
     font-size: 20px;
     padding-top: 10px;
 }
-a{
-    text-decoration: none !important;
-}
 
-.nav_ele{
-    display: inline-block;
-    padding: 10px;
-}
 
 .string-field{
     margin-top: 10px;
@@ -82,10 +129,6 @@ a{
     border-radius: 100%;
 }
 
-.btn-primary{
-    background-color: #3D9DE6 !important;
-    border-color: #3D9DE6 !important;
-}
 
 .heart{
     transition-timing-function: ease-in-out;
@@ -101,19 +144,6 @@ a{
     margin-top: 20px;
 }
 
-.close{
-    color: #fff !important;
-    opacity: 0.5
-}
-
-.close:hover{opacity: 1}
-
-.alert-success{
-    background-color: #23c15d !important;
-    color: #fff;
-}
-
-.alert-danger{
-    background-color: #F04124 !important;
-    color: #fff;
-}
+/*=======================================
+-------- End Author Custom Styles --------
+=========================================*/
