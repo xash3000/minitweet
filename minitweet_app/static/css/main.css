@@ -109,7 +109,7 @@ a{
     height: 40px;
 }
 
-#publish{
+.textarea-field{
     margin-top: 20px;
     margin-bottom: 20px;
     height: 150px;
