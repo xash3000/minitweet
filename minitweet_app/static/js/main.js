@@ -11,5 +11,6 @@ $(document).ready(function() {
                 $(this).addClass("fa-heart-o");
                 $(this).parent().find(".likes-counting").html(original - 1);
             }
+            $(this).parent().after("this is not implemented yet!")
     })
 })

@@ -17,6 +17,7 @@ class LoginForm(Form):
     password = PasswordField('password', validators=[DataRequired()])
     remember_me = BooleanField("remember_me", default=True)
 
+
 class SignUpForm(Form):
     username = StringField(
         'username',
@@ -30,3 +31,7 @@ class SignUpForm(Form):
         'password',
         validators=[DataRequired(), Length(min=6)]
     )
+
+
+class ProfileSettings(Form):
+    bio = StringField("bio", validators=[DataRequired(), Length(min=5, max=170)])

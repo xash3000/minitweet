@@ -29,14 +29,16 @@ class User(db.Model):
     name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
+    bio = db.Column(db.String)
     # one to many relationship
     posts = db.relationship("Post", backref="author", lazy="dynamic")
 
-    def __init__(self, name, email, password):
+    def __init__(self, name, email, password, bio=''):
         self.name = name
         self.email = email
         # generate one way hash for password
         self.password = bcrypt.generate_password_hash(password)
+        self.bio = bio
 
     #=========================================#
     #  Flask-Login extension required methods #

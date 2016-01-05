@@ -7,7 +7,7 @@ from flask.ext.login import (
 )
 
 # in package imports
-from .forms import PublishForm, SignUpForm, LoginForm
+from .forms import PublishForm, SignUpForm, LoginForm, ProfileSettings
 from . import app, db, bcrypt
 from .models import Post, User
 
@@ -40,6 +40,7 @@ def publish():
     else:
         # GET request
         return render_template("publish.html", form=form)
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -95,7 +96,28 @@ def user_profile(username):
     # query user from the database by username
     # if user doesn't exsist throw 404 error
     user = User.query.filter_by(name=username).first_or_404()
+    if current_user.is_authenticated and current_user.name == user.name:
+        user_profile = True
+    else:
+        user_profile = False
     return render_template(
             "user_profile.html",
             user=user,
+            user_profile=user_profile
         )
+
+
+@app.route("/u/<username>/profile_settings", methods=["GET", "POST"])
+def profile_settings(username):
+    user = User.query.filter_by(name=username).first_or_404()
+    form = ProfileSettings()
+    if form.validate_on_submit():
+        user.bio = form.bio.data
+        db.session.add(user)
+        db.session.commit()
+        flash("new settings were successfully applied", "success")
+        return redirect(url_for("user_profile", username=user.name))
+    if current_user.is_authenticated and current_user.name == user.name:
+        return render_template("profile_settings.html", form=form, user_bio=user.bio)
+    else:
+        return abort(403)
