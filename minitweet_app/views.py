@@ -112,10 +112,19 @@ def profile_settings(username):
     user = User.query.filter_by(name=username).first_or_404()
     form = ProfileSettings()
     if form.validate_on_submit():
-        user.bio = form.bio.data
+        changes = False
+        if form.bio.data:
+            user.bio = form.bio.data
+            changes = True
+        if form.website.data:
+            user.website = form.website.data
+            changes = True
         db.session.add(user)
         db.session.commit()
-        flash("new settings were successfully applied", "success")
+        if changes:
+            flash("new settings were successfully applied", "success")
+        else:
+            flash("settings not changed", "primary")
         return redirect(url_for("user_profile", username=user.name))
     if current_user.is_authenticated and current_user.name == user.name:
         return render_template("profile_settings.html", form=form, user_bio=user.bio)

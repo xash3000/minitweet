@@ -3,8 +3,23 @@
 {% block content %}
 <div class="container">
     <form method="post">
+        {{ form.hidden_tag() }}
+
         <div class="bio">
-            {{ form.hidden_tag() }}
+            {{ form.website(
+                class_="col-xs-12 col-md-4 col-md-offset-4 string-field",
+                placeholder="your website"
+                ) }}
+            <span class="error">
+                {% if form.website.errors %}
+                    {% for error in form.website.errors %}
+                     <p class="col-xs-12 col-md-4 col-md-offset-4">{{ error }}</p>
+                    {% endfor %}
+                {% endif %}
+            </span>
+        </div>
+
+        <div class="bio">
             {{ form.bio(
                 class_="col-xs-12 col-md-4 col-md-offset-4 textarea-field",
                 placeholder="your new bio"

@@ -77,6 +77,11 @@ a{
     color: #fff;
 }
 
+.alert-primary{
+    background-color: #3D9DE6 !important;
+    color: #fff;
+}
+
 .btn-primary{
     background-color: #3D9DE6 !important;
     border-color: #3D9DE6 !important;

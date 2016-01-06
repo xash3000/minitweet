@@ -34,4 +34,5 @@ class SignUpForm(Form):
 
 
 class ProfileSettings(Form):
-    bio = TextAreaField("bio", validators=[DataRequired(), Length(min=5, max=170)])
+    website = StringField("website")
+    bio = TextAreaField("bio")
