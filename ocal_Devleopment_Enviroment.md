@@ -28,7 +28,7 @@ install postgresql if you don't have it and create new database
 in order to run the app you need to set some environment variables
 
 ```
-export CONFIG=config.DevConfig
+export CONFIG="config.DevConfig"
 
 export SECRET_KEY="you-secret-key-here-use-os.urandom()"
 
