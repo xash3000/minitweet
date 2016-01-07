@@ -12,7 +12,7 @@ minitweet is built using python with flask framework in the backend.
 in the front-end
 it uses bootstrap and jquery. and PostgreSQL for the database.
 
-read this short guide to setup [Local Development Enviroment](Local_Devleopment_Enviroment.md)
+read this short guide to setup [Local Development Enviroment](https://github.com/afaki077/minitweet/blob/master/ocal_Devleopment_Enviroment.md)
 
 # contributing to the project
 if you're interested in this project and you want to contribute, follow this steps:
