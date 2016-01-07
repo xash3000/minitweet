@@ -17,5 +17,5 @@ $(document).ready(function() {
     $(".alert").ready(function(){
         setTimeout(function(){
             $(this).hide()}, 5000)
-        )}
+        })
 })
