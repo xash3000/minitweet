@@ -35,6 +35,12 @@ export SECRET_KEY="you-secret-key-here-use-os.urandom()"
 export DATABASE_URL="postgresql:///your_database_url_here"
 ```
 
+### initializing the database with Flask-SQLAlchemy
+
+```
+python createdb.py
+```
+
 # Run the server
 ```
 python manage.py runserver
