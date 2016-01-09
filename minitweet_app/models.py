@@ -33,14 +33,17 @@ class User(db.Model):
     website = db.Column(db.String)
     # one to many relationship
     posts = db.relationship("Post", backref="author", lazy="dynamic")
+    confirmed = db.Column(db.Boolean, nullable=False, default=False)
 
-    def __init__(self, name, email, password, bio='', website=""):
+    def __init__(self, name, email, password, bio='', website="", confirmed=False):
         self.name = name
         self.email = email
         # generate one way hash for password
         self.password = bcrypt.generate_password_hash(password)
         self.bio = bio
         self.website = website
+        self.confirmed = confirmed
+
 
     #=========================================#
     #  Flask-Login extension required methods #

@@ -29,10 +29,13 @@ in order to run the app you need to set some environment variables
 
 ```
 export CONFIG="config.DevConfig"
-
 export SECRET_KEY="you-secret-key-here-use-os.urandom()"
-
 export DATABASE_URL="postgresql:///your_database_url_here"
+export SECURITY_PASSWORD_SALT="this-should-be-complex"
+export MAIL_USERNAME ="your-google-email-here"
+export MAIL_PASSWORD ="you-gmail-password"
+# if you have one sender and change the config if not
+export MAIL_DEFAULT_SENDER="deafult-sender"
 ```
 
 ### initializing the database with Flask-SQLAlchemy
@@ -43,7 +46,7 @@ python createdb.py
 
 # Run the server
 ```
-python manage.py runserver
+python run.py
 ```
 
-open your browser and go to `localhost:5000` to see the website in action.
+open your browser and go to `localhost:8000` to see the website in action.

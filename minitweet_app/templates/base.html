@@ -39,18 +39,21 @@
             {% endif %}
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            {% if current_user.is_authenticated %}
-            <li>
-                <a href="{{ url_for('user_profile', username=current_user.name) }}">
-                    <img class="gravatar-img" src="{{ current_user.email | gravatar(size=20) }}">
-                    <span>{{ current_user.name }}</span>
-                </a>
-            </li>
-              <li><a href="{{ url_for('logout') }}"><span>Logout</span></a></li>
-            {% else %}
-              <li><a href="{{ url_for('signup') }}"><span>Sign up</span></a></li>
-              <li><a href="{{ url_for('login') }}"><span>Login</span></a></li>
-            {% endif %}
+              {% if current_user.is_authenticated %}
+                  <li>
+                      <a href="{{ url_for('user_profile', username=current_user.name) }}">
+                          <img class="gravatar-img" src="{{ current_user.email | gravatar(size=20) }}">
+                          <span>{{ current_user.name }}</span>
+                      </a>
+                  </li>
+                  {% if not current_user.confirmed%}
+                      <li><a href="{{ url_for('unconfirmed') }}"><span>Confirm Email</span></a></li>
+                  {% endif %}
+                  <li><a href="{{ url_for('logout') }}"><span>Logout</span></a></li>
+              {% else %}
+                  <li><a href="{{ url_for('signup') }}"><span>Sign up</span></a></li>
+                  <li><a href="{{ url_for('login') }}"><span>Login</span></a></li>
+              {% endif %}
           </ul>
         </div>
         <!-- /.navbar-collapse -->

@@ -5,6 +5,8 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
 from flask.ext.bcrypt import Bcrypt
 from flask.ext.gravatar import Gravatar
+from flask.ext.mail import Mail
+
 
 app = Flask(__name__)
 app.config.from_object(os.environ["CONFIG"])
@@ -27,6 +29,8 @@ gravatar = Gravatar(
                     use_ssl=True,
                     base_url=None
              )
+
+mail = Mail(app)
 
 from .models import User
 

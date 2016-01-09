@@ -10,7 +10,9 @@ from flask.ext.login import (
 from .forms import PublishForm, SignUpForm, LoginForm, ProfileSettings
 from . import app, db, bcrypt
 from .models import Post, User
-
+from .confirmation_token import generate_confirmation_token, confirm_token
+from .email import send_email
+from .decorators import check_confirmed
 
 @app.route("/")
 @app.route("/posts")
@@ -23,6 +25,7 @@ def home():
 
 @app.route("/publish", methods=["GET", "POST"])
 @login_required
+@check_confirmed
 def publish():
     form = PublishForm()
     # check if the form pass all validators in forms.py
@@ -67,18 +70,35 @@ def signup():
     form = SignUpForm()
     if form.validate_on_submit():
         # POST request
+        check_u = User.query.filter_by(email=form.email.data).first()
+        if check_u:
+            if check_u.email == form.email.data:
+                flash('email already exsist', "danger")
+                return redirect(url_for('signup'))
+        check_u2 = User.query.filter_by(name=form.username.data).first()
+        if check_u2:
+            if check_u2.name == form.username.data:
+                flash('username already exsist', "danger")
+                return redirect(url_for('signup'))
         # create new User instance
         u = User(
             name=form.username.data,
             email=form.email.data,
-            password=form.password.data
+            password=form.password.data,
+            confirmed=False
         )
         # add new user to the database
         db.session.add(u)
         db.session.commit()
-        # login user
-        login_user(u, remember=True)
-        return redirect(url_for('home'))
+        token = generate_confirmation_token(u.email)
+        confirm_url = url_for('confirm_email', token=token, _external=True)
+        html = render_template('email_activate.html', confirm_url=confirm_url)
+        subject = "email confirmation for minitweet"
+        send_email(u.email, subject, html)
+        login_user(u)
+        flash('A confirmation email has been sent via email.', 'success')
+        return redirect(url_for("unconfirmed"))
+
     # GET request
     return render_template("signup.html", form=form)
 
@@ -92,6 +112,8 @@ def logout():
 
 
 @app.route("/u/<username>")
+@login_required
+@check_confirmed
 def user_profile(username):
     # query user from the database by username
     # if user doesn't exsist throw 404 error
@@ -130,3 +152,43 @@ def profile_settings(username):
         return render_template("profile_settings.html", form=form, user_bio=user.bio)
     else:
         return abort(403)
+
+
+@app.route('/confirm/<token>')
+def confirm_email(token):
+    try:
+        # try confirm_email
+        email = confirm_token(token)
+        user = User.query.filter_by(email=email).first_or_404()
+        if user.confirmed:
+            flash('Account already confirmed. Please login.', 'success')
+        else:
+            user.confirmed = True
+            db.session.add(user)
+            db.session.commit()
+            login_user(user)
+            flash('You have confirmed your account. Thanks!', 'success')
+    except:
+        flash('The confirmation link is invalid or has expired.', 'danger')
+    return redirect(url_for('home'))
+
+
+@app.route("/unconfirmed")
+@login_required
+def unconfirmed():
+    if current_user.confirmed:
+        return redirect('home')
+    flash('Please confirm your account!', 'warning')
+    return render_template('unconfirmed.html')
+
+
+@app.route('/resend_confirmation')
+@login_required
+def resend_confirmation():
+    token = generate_confirmation_token(current_user.email)
+    confirm_url = url_for('confirm_email', token=token, _external=True)
+    html = render_template('email_activate.html', confirm_url=confirm_url)
+    subject = "Please confirm your email"
+    send_email(current_user.email, subject, html)
+    flash('A new confirmation email has been sent.', 'success')
+    return redirect(url_for('unconfirmed'))
