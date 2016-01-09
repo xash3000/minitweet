@@ -112,7 +112,6 @@ def logout():
 
 
 @app.route("/u/<username>")
-@login_required
 @check_confirmed
 def user_profile(username):
     # query user from the database by username

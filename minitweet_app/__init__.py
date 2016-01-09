@@ -15,7 +15,7 @@ db = SQLAlchemy(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = "views.login"
+login_manager.login_view = "login"
 
 bcrypt = Bcrypt(app)
 
