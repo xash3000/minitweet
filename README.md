@@ -3,7 +3,7 @@
 [Minitweet](http://minitweet.herokuapp.com) is a twitter clone to flask
 framework.
 
-it doesn't have all features of twitter (i.e real-time notifications).
+it doesn't have all features of twitter (e.g real-time notifications, ajax, etc...).
 
 ## Local Development Environment
 
