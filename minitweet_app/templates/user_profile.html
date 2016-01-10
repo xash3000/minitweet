@@ -14,7 +14,7 @@
         {% endif %}
         {% if user.website %}
             <div class="user_website">
-                <a href="{{ user.website }}">{{ user.website }}</a>
+                <a href="{{ user.website }}" rel="nofollow">{{ user.website }}</a>
             </div>
         {% endif %}
         {% if current_user.is_authenticated and user_profile%}
