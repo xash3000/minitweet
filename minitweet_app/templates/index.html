@@ -1,7 +1,18 @@
 {% extends "base.html" %}
 
+
 {% block content %}
 <div class="container">
+    {% if not current_user.is_authenticated %}
+        <div class="alert alert-primary text-center">
+            <a class="close" title="Close" href="#" data-dismiss="alert">×</a>
+            <span class="msg">
+                welcome to minitweet a twitter clone with minimal features
+                <a href="{{ url_for('signup') }}"><span style="color:#0038ff">signup now!<span></a>
+            </span>
+        </div>
+    {% endif %}
+
     <div class="posts">
         {% for post in posts %}
             <div class="post text-center col-xs-12">
