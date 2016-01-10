@@ -24,6 +24,12 @@ pip install -r requirements.txt
 ### create database
 install postgresql if you don't have it and create new database
 
+### initializing the database with Flask-SQLAlchemy
+
+```
+python createdb.py
+```
+
 ### environment variables
 in order to run the app you need to set some environment variables
 
@@ -38,11 +44,6 @@ export MAIL_PASSWORD ="you-gmail-password"
 export MAIL_DEFAULT_SENDER="deafult-sender"
 ```
 
-### initializing the database with Flask-SQLAlchemy
-
-```
-python createdb.py
-```
 
 # Run the server
 ```

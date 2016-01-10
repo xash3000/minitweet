@@ -14,5 +14,5 @@ $(document).ready(function() {
             $(this).parent().after("this is not implemented yet!")
     })
 
-    $(".alert").delay(5000).fadeOut(300);
+    $(".alert").delay(10000).fadeOut(300);
 })
