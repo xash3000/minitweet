@@ -25,12 +25,18 @@ pip install -r requirements.txt
 install postgresql if you don't have it and create two databases
 one for development and another one for testing
 
+
 ### initializing the database with Flask-SQLAlchemy
 
 ```
 python createdb.py
 ```
 
+### databases migration
+```
+python manage.py db init
+python manage.py db migrate
+```
 
 ### environment variables
 in order to run the app you need to set some environment variables
@@ -47,10 +53,9 @@ export MAIL_PASSWORD ="you-gmail-password"
 export MAIL_DEFAULT_SENDER="deafult-sender"
 ```
 
-
 # Run the server
 ```
 python manage.py runserver
 ```
 
-open your browser and go to `localhost:8000` to see the website in action.
+open your browser and go to `localhost:5000` to see the website in action.
