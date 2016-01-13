@@ -37,7 +37,7 @@ def publish():
         # add new post to the database
         db.session.add(Post(title, body, user_id))
         db.session.commit()
-        flash('New entry was successfully posted. Thanks.', 'success')
+        flash('New entry was successfully posted Thanks', 'success')
         # redirect user to the main page
         return redirect(url_for("home"))
     else:
@@ -54,7 +54,7 @@ def login():
         user = User.query.filter(User.name == form.username.data).first()
         # check if user exsist and the password match the hash stored in the database
         if user and bcrypt.check_password_hash(user.password, form.password.data):
-                flash("you were just logged in!", 'success')
+                flash("you were just logged in", 'success')
                 remember = form.remember_me.data
                 login_user(user, remember=remember)
                 return redirect(url_for("home"))
@@ -96,7 +96,7 @@ def signup():
         subject = "email confirmation for minitweet"
         send_email(u.email, subject, html)
         login_user(u)
-        flash('A confirmation email has been sent via email.', 'success')
+        flash('A confirmation email has been sent via email', 'success')
         return redirect(url_for("unconfirmed"))
 
     # GET request
@@ -107,7 +107,7 @@ def signup():
 @login_required
 def logout():
     logout_user()
-    flash("you were just logged out!", 'success')
+    flash("you were just logged out", 'success')
     return redirect(url_for("home"))
 
 
@@ -160,13 +160,13 @@ def confirm_email(token):
         email = confirm_token(token)
         user = User.query.filter_by(email=email).first_or_404()
         if user.confirmed:
-            flash('Account already confirmed. Please login.', 'success')
+            flash('Account already confirmed Please login.', 'success')
         else:
             user.confirmed = True
             db.session.add(user)
             db.session.commit()
             login_user(user)
-            flash('You have confirmed your account. Thanks!', 'success')
+            flash('You have confirmed your account Thanks', 'success')
     except:
         flash('The confirmation link is invalid or has expired.', 'danger')
     return redirect(url_for('home'))
@@ -176,8 +176,8 @@ def confirm_email(token):
 @login_required
 def unconfirmed():
     if current_user.confirmed:
-        return redirect('home')
-    flash('Please confirm your account!', 'warning')
+        return redirect(url_for('home'))
+    flash('Please confirm your account', 'warning')
     return render_template('unconfirmed.html')
 
 
@@ -189,5 +189,5 @@ def resend_confirmation():
     html = render_template('email_activate.html', confirm_url=confirm_url)
     subject = "Please confirm your email"
     send_email(current_user.email, subject, html)
-    flash('A new confirmation email has been sent.', 'success')
+    flash('A new confirmation email has been sent', 'success')
     return redirect(url_for('unconfirmed'))

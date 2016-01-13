@@ -82,6 +82,9 @@ a{
     color: #fff;
 }
 
+.alert-warning{
+    background-color: #ffe14e !important;
+}
 .btn-primary{
     background-color: #3D9DE6 !important;
     border-color: #3D9DE6 !important;

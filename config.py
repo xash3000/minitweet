@@ -28,5 +28,11 @@ class DevConfig(BaseConfig):
     DEBUG = True
 
 
+class TestConfig(BaseConfig):
+    SQLALCHEMY_DATABASE_URI = os.environ["TESTING_DATABASE"]
+    TESTING=True
+    WTF_CSRF_ENABLED=False
+
+
 class ProductionConfig(BaseConfig):
     DEBUG = False
