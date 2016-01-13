@@ -175,7 +175,7 @@ def confirm_email(token):
 @app.route("/unconfirmed")
 @login_required
 def unconfirmed():
-    if current_user.confirmed:
+    if current_user.confirmed or not current_user.is_authenticated:
         return redirect(url_for('home'))
     flash('Please confirm your account', 'warning')
     return render_template('unconfirmed.html')

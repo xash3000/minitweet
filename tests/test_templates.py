@@ -44,13 +44,12 @@ class TestTemplates(BaseTestCase):
     def test_unconfirmed_page_template(self):
         with self.client:
             self.create_user(
-                name="test_user",
-                email="test@user.com",
-                password="testuserpassword",
-                confirmed=False
+                    name="unconfirmed_user",
+                    email="unconfirmed@unconfirmed.un",
+                    password="unconfirmed"
             )
-            self.client.post("/login",
-                data=dict(username="test_user", password="testuserpassword"),
+            self.client.post('/login',
+                data=dict(username="unconfirmed_user", password="unconfirmed"),
                 follow_redirects=True
             )
             self.client.get("/unconfirmed")
