@@ -12,9 +12,6 @@ manager = Manager(app)
 
 manager.add_command("db", MigrateCommand)
 
-@manager.command
-def run():
-    app.run(host="0.0.0.0", port=5000)
 
 @manager.command
 def test():
@@ -53,7 +50,8 @@ def cov():
     """Runs the unit tests with coverage."""
     cov = coverage.coverage(
         branch=True,
-        include='minitweet_app/*'
+        include='minitweet_app/*',
+        omit="*/__init__.py"
     )
     cov.start()
     tests = unittest.TestLoader().discover('tests')

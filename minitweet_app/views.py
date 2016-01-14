@@ -1,21 +1,23 @@
+# ``# pragma: no cover`` is to exclude lines from coverage test
 # flask imports
-from flask import render_template, redirect, url_for, request, flash, abort
+from flask import render_template, redirect, url_for, request, flash, abort \
+  # pragma: no cover
 
 #flask.extensions imports
 from flask.ext.login import (
-    login_user, login_required, logout_user, current_user
+    login_user, login_required, logout_user, current_user   # pragma: no cover
 )
 
 # in package imports
-from .forms import PublishForm, SignUpForm, LoginForm, ProfileSettings
-from . import app, db, bcrypt
-from .models import Post, User
-from .confirmation_token import generate_confirmation_token, confirm_token
-from .email import send_email
-from .decorators import check_confirmed
+from .forms import PublishForm, SignUpForm, LoginForm, ProfileSettings   # pragma: no cover
+from . import app, db, bcrypt  # pragma: no cover
+from .models import Post, User  # pragma: no cover
+from .confirmation_token import generate_confirmation_token, confirm_token  # pragma: no cover
+from .email import send_email  # pragma: no cover
+from .decorators import check_confirmed  # pragma: no cover
 
-@app.route("/")
-@app.route("/posts")
+@app.route("/")  # pragma: no cover
+@app.route("/posts")  # pragma: no cover
 def home():
     """ Main Page """
     # query all posts in desceding order
@@ -23,9 +25,9 @@ def home():
     return render_template("index.html", posts=posts)
 
 
-@app.route("/publish", methods=["GET", "POST"])
-@login_required
-@check_confirmed
+@app.route("/publish", methods=["GET", "POST"])  # pragma: no cover
+@login_required  # pragma: no cover
+@check_confirmed  # pragma: no cover
 def publish():
     form = PublishForm()
     # check if the form pass all validators in forms.py
@@ -45,7 +47,7 @@ def publish():
         return render_template("publish.html", form=form)
 
 
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/login", methods=["GET", "POST"])  # pragma: no cover
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -65,7 +67,7 @@ def login():
     return render_template("login.html", form=form)
 
 
-@app.route("/signup", methods=["GET", "POST"])
+@app.route("/signup", methods=["GET", "POST"])  # pragma: no cover
 def signup():
     form = SignUpForm()
     if form.validate_on_submit():
@@ -103,16 +105,16 @@ def signup():
     return render_template("signup.html", form=form)
 
 
-@app.route('/logout')
-@login_required
+@app.route('/logout')  # pragma: no cover
+@login_required  # pragma: no cover
 def logout():
     logout_user()
     flash("you were just logged out", 'success')
     return redirect(url_for("home"))
 
 
-@app.route("/u/<username>")
-@check_confirmed
+@app.route("/u/<username>")  # pragma: no cover
+@check_confirmed  # pragma: no cover
 def user_profile(username):
     # query user from the database by username
     # if user doesn't exsist throw 404 error
@@ -128,7 +130,7 @@ def user_profile(username):
         )
 
 
-@app.route("/u/<username>/profile_settings", methods=["GET", "POST"])
+@app.route("/u/<username>/profile_settings", methods=["GET", "POST"])  # pragma: no cover
 def profile_settings(username):
     user = User.query.filter_by(name=username).first_or_404()
     form = ProfileSettings()
@@ -153,7 +155,7 @@ def profile_settings(username):
         return abort(403)
 
 
-@app.route('/confirm/<token>')
+@app.route('/confirm/<token>')  # pragma: no cover
 def confirm_email(token):
     try:
         # try confirm_email
@@ -172,8 +174,8 @@ def confirm_email(token):
     return redirect(url_for('home'))
 
 
-@app.route("/unconfirmed")
-@login_required
+@app.route("/unconfirmed")  # pragma: no cover
+@login_required  # pragma: no cover
 def unconfirmed():
     if current_user.confirmed or not current_user.is_authenticated:
         return redirect(url_for('home'))
@@ -181,8 +183,8 @@ def unconfirmed():
     return render_template('unconfirmed.html')
 
 
-@app.route('/resend_confirmation')
-@login_required
+@app.route('/resend_confirmation')  # pragma: no cover
+@login_required  # pragma: no cover
 def resend_confirmation():
     token = generate_confirmation_token(current_user.email)
     confirm_url = url_for('confirm_email', token=token, _external=True)
