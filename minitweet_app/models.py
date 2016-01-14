@@ -1,15 +1,16 @@
-from . import db, bcrypt
+# ``# pragma: no cover`` is to exclude lines from coverage test
+from . import db, bcrypt  # pragma: no cover
 
 
 class Post(db.Model):
 
-    __tablename__ = "posts"
+    __tablename__ = "posts"  # pragma: no cover
 
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String, nullable=False)
-    body = db.Column(db.String, nullable=False)
+    id = db.Column(db.Integer, primary_key=True)  # pragma: no cover
+    title = db.Column(db.String, nullable=False)  # pragma: no cover
+    body = db.Column(db.String, nullable=False)   # pragma: no cover
     # ForeignKey
-    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))  # pragma: no cover
 
     def __init__(self, title,  body, author_id):
         self.title = title
@@ -23,17 +24,17 @@ class Post(db.Model):
 
 class User(db.Model):
 
-    __tablename__ = "users"
+    __tablename__ = "users"  # pragma: no cover
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False)
-    email = db.Column(db.String, nullable=False)
-    password = db.Column(db.String, nullable=False)
-    bio = db.Column(db.String)
-    website = db.Column(db.String)
+    id = db.Column(db.Integer, primary_key=True)  # pragma: no cover
+    name = db.Column(db.String, nullable=False)  # pragma: no cover
+    email = db.Column(db.String, nullable=False)  # pragma: no cover
+    password = db.Column(db.String, nullable=False)  # pragma: no cover
+    bio = db.Column(db.String)  # pragma: no cover
+    website = db.Column(db.String)  # pragma: no cover
     # one to many relationship
-    posts = db.relationship("Post", backref="author", lazy="dynamic")
-    confirmed = db.Column(db.Boolean, nullable=False, default=False)
+    posts = db.relationship("Post", backref="author", lazy="dynamic")  # pragma: no cover
+    confirmed = db.Column(db.Boolean, nullable=False, default=False)  # pragma: no cover
 
     def __init__(self, name, email, password, bio='', website="", confirmed=False):
         self.name = name

@@ -1,11 +1,12 @@
-from functools import wraps
+# ``# pragma: no cover`` is to exclude lines from coverage test
+from functools import wraps  # pragma: no cover
 
-from flask import flash, redirect, url_for
-from flask.ext.login import current_user
+from flask import flash, redirect, url_for  # pragma: no cover
+from flask.ext.login import current_user  # pragma: no cover
 
 
 def check_confirmed(func):
-    @wraps(func)
+    @wraps(func)  # pragma: no cover
     def decorated_function(*args, **kwargs):
         if current_user.is_authenticated or current_user.is_active:
             if current_user.confirmed is False:
