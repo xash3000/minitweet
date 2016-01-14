@@ -12,6 +12,9 @@ manager = Manager(app)
 
 manager.add_command("db", MigrateCommand)
 
+@manager.command
+def run():
+    app.run(host="0.0.0.0", port=5000)
 
 @manager.command
 def test():
