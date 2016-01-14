@@ -29,7 +29,10 @@ class DevConfig(BaseConfig):
 
 
 class TestConfig(BaseConfig):
-    SQLALCHEMY_DATABASE_URI = os.environ["TESTING_DATABASE"]
+    try:
+        SQLALCHEMY_DATABASE_URI = os.environ["TESTING_DATABASE"]
+    except:
+        print("you must specify testing database")
     TESTING=True
     WTF_CSRF_ENABLED=False
 
