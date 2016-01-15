@@ -30,7 +30,7 @@ class TestTemplates(BaseTestCase):
     def test_userProfile_page_template(self):
         with self.client:
             self.client.get("/u/admin")
-            self.assertTemplateUsed("user_profile.html")
+            self.assertTemplateUsed("user_profile_posts.html")
 
     def test_profileSettings_page_template(self):
         with self.client:

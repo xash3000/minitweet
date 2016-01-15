@@ -1,0 +1,70 @@
+{% extends "user_profile.html" %}
+
+{% block user_content %}
+{% if followers %}
+<<ul class="nav nav-tabs col-xs-6 col-xs-offset-3">
+    <li role="presentation">
+        <a href="{{ url_for('user_profile_posts', username=user.name) }}">
+            posts
+        </a>
+    </li>
+    <li role="presentation">
+        <a href="{{ url_for('following', username=user.name) }}">
+            following
+        </a>
+    </li>
+    <li role="presentation" class="active">
+        <a href="{{ url_for('followers', username=user.name) }}">
+            followers
+        </a>
+    </li>
+</ul>
+{% else %}
+<ul class="nav nav-tabs col-xs-6 col-xs-offset-3">
+    <li role="presentation">
+        <a href="{{ url_for('user_profile_posts', username=user.name) }}">
+            posts
+        </a>
+    </li>
+    <li role="presentation" class="active">
+        <a href="{{ url_for('following', username=user.name) }}">
+            following
+        </a>
+    </li>
+    <li role="presentation">
+        <a href="{{ url_for('followers', username=user.name) }}">
+            followers
+        </a>
+    </li>
+</ul>
+{% endif %}
+
+{% set profile_owner=user.name %}
+
+<div class="users col-xs-12">
+    {% for user in users %}
+        {% if not(user.name) == profile_owner %}
+            <div class="user text-center">
+                <div class="gravatar">
+                    <a href="{{ url_for('user_profile_posts', username=user.name) }}">
+                        <img src="{{ user.email | gravatar(size=20) }}" class="gravatar-img">
+                    </a>
+                </div>
+                <div class="username">
+                    <a href="{{ url_for('user_profile_posts', username=user.name) }}">
+                        <h3>{{ user.name }}</h3>
+                    </a>
+                    </div>
+                {% if user.bio %}
+                    <div class="user_bio"><p>{{ user.bio }}<p></div>
+                {% endif %}
+                {% if user.website %}
+                    <div class="user_website">
+                        <a href="{{ user.website }}" rel="nofollow">{{ user.website }}</a>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}

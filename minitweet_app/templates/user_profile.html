@@ -6,7 +6,7 @@
 <div class="container">
     <div class="user_info text-center">
         <div class="gravatar">
-            <img src="{{ user.email | gravatar }}" class="gravatar-img">
+            <img src="{{ user.email | gravatar(size=100) }}" class="gravatar-img">
         </div>
         <div class="username"><h3>{{ user.name }}</h3></div>
         {% if user.bio %}
@@ -17,39 +17,25 @@
                 <a href="{{ user.website }}" rel="nofollow">{{ user.website }}</a>
             </div>
         {% endif %}
-        {% if current_user.is_authenticated and user_profile%}
-            <a href="{{ url_for('profile_settings', username=user.name) }}">
-                change your profile settings
-            </a>
+        {% if current_user.is_authenticated%}
+            {% if user_profile %}
+                <a href="{{ url_for('profile_settings', username=user.name) }}">
+                    change your profile settings
+                </a>
+            {% else %}
+                {% if current_user.is_following(user) %}
+                    <a href="{{ url_for('unfollow', username=user.name) }}" class="btn btn-danger">
+                        unfollow
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('follow', username=user.name) }}" class="btn btn-success">
+                        Follow
+                    </a>
+                {% endif %}
+            {% endif %}
         {% endif %}
     </div>
 
-    <div class="text-center"><h1>My posts</h1></div>
-        <div class="posts">
-            {% for post in user.posts %}
-                <div class="post text-center col-xs-12">
-                    <div class="post-title">
-                        <h1>{{ post.title }}</h1>
-                    </div>
-
-                    <div class="post-author">
-                        <a href="/u/{{ post.author.name }}">
-                            <img class="gravatar-img" src="{{ post.author.email | gravatar(size='40') }}">
-                            <h5 style="display:inline-block">{{ post.author.name }}<h5>
-                        </a>
-                    </div>
-
-                    <div class="post-body col-xs-12">
-                        <p>{{ post.body }}</p>
-                    </div>
-                    <div class="likes">
-                        <i class="fa fa-2x fa-heart-o heart"></i>
-                        <span class="likes-counting">0</span>
-                    </div>
-                    <div class="sep"></div>
-                </div>
-            {% endfor %}
-        </div>
+    {% block user_content %}{% endblock %}
 </div>
-
 {% endblock %}

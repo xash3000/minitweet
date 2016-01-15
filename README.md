@@ -14,6 +14,23 @@ it uses bootstrap and jquery. and PostgreSQL for the database.
 
 read this short guide to setup [Local Development Enviroment](https://github.com/afaki077/minitweet/blob/master/local_Devleopment_Enviroment.md)
 
+
+# Is it Tested
+yes, run the following commands after setup [Local Development Enviroment](https://github.com/afaki077/minitweet/blob/master/local_Devleopment_Enviroment.md)
+
+
+**run tests**
+
+```
+python manage.py test
+```
+
+**run test with coverage**
+
+```
+python manage.py cov
+```
+
 # contributing to the project
 if you're interested in this project and you want to contribute, follow this steps:
 

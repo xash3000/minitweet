@@ -15,6 +15,9 @@ class BaseTestCase(TestCase):
         app.config.from_object("config.TestConfig")
         db.create_all()
         self.create_user("admin", "ad@min.com", "adminpassword", confirmed=True)
+        admin = User.query.get(1)
+        # user follow himself to show his posts in the main page
+        admin.follow(admin)
         db.session.add(
             Post("Test post", "This is a test", 1))
         db.session.commit()

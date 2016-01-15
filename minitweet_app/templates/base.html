@@ -41,7 +41,7 @@
           <ul class="nav navbar-nav navbar-right">
               {% if current_user.is_authenticated %}
                   <li>
-                      <a href="{{ url_for('user_profile', username=current_user.name) }}">
+                      <a href="{{ url_for('user_profile_posts', username=current_user.name) }}">
                           <img class="gravatar-img" src="{{ current_user.email | gravatar(size=20) }}">
                           <span>{{ current_user.name }}</span>
                       </a>
