@@ -28,7 +28,7 @@
                 </div>
 
                 <div class="post-body col-xs-12">
-                    <p>{{ post.body }}</p>
+                        {{ post.body | markdown }}
                 </div>
                 <div class="likes">
                     <i class="fa fa-2x fa-heart-o heart"></i>

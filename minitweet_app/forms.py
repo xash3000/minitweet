@@ -8,7 +8,7 @@ class PublishForm(Form):
             'post_title', validators=[DataRequired(), Length(min=5, max=50)]
     )
     textarea = TextAreaField(
-            "textarea", validators=[DataRequired(), Length(min=5, max=300)]
+            "textarea", validators=[DataRequired(), Length(min=5, max=400)]
     )
 
 

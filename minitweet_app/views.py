@@ -123,6 +123,7 @@ def user_profile_posts(username):
     # query user from the database by username
     # if user doesn't exsist throw 404 error
     user = User.query.filter_by(name=username).first_or_404()
+    posts = user.posts.order_by(Post.id.desc())
     if current_user.is_authenticated and current_user.name == user.name:
         user_profile = True
     else:
@@ -130,7 +131,8 @@ def user_profile_posts(username):
     return render_template(
             "user_profile_posts.html",
             user=user,
-            user_profile=user_profile
+            user_profile=user_profile,
+            posts=posts
         )
 
 
@@ -236,7 +238,7 @@ def resend_confirmation():
     return redirect(url_for('unconfirmed'))
 
 
-@app.route("/u/<username>/follow")  # pragma: no cover 
+@app.route("/u/<username>/follow")  # pragma: no cover
 @login_required  # pragma: no cover
 @check_confirmed  # pragma: no cover
 def follow(username):

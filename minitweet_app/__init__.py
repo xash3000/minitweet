@@ -6,7 +6,7 @@ from flask.ext.login import LoginManager
 from flask.ext.bcrypt import Bcrypt
 from flask.ext.gravatar import Gravatar
 from flask.ext.mail import Mail
-
+from flask.ext.markdown import Markdown
 
 app = Flask(__name__)
 app.config.from_object(os.environ["CONFIG"])
@@ -31,6 +31,7 @@ gravatar = Gravatar(
              )
 
 mail = Mail(app)
+Markdown(app, output_format='html5')
 
 from .models import User
 
