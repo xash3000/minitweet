@@ -160,6 +160,11 @@ a{
     margin-top: 10px;
     margin-bottom: 50px;
 }
+
+.preview{
+    margin-top: 50px;
+    overflow: scroll;
+}
 /*=======================================
 -------- End Author Custom Styles --------
 =========================================*/

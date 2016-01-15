@@ -14,4 +14,8 @@ $(document).ready(function() {
             $(this).parent().after("this is not implemented yet!")
     })
 
+    var preview = $(".preview")
+    $(".textarea-field").on("input", function() {
+        preview.html(markdown.toHTML($(this).val()))
+    })
 })
