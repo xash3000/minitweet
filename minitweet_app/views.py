@@ -21,7 +21,10 @@ from .decorators import check_confirmed  # pragma: no cover
 def home():
     """ Main Page """
     # query all posts in desceding order
-    posts = Post.query.order_by(Post.id.desc()).all()
+    if current_user.is_authenticated and current_user.confirmed:
+        posts = current_user.get_posts_from_followed_users()
+    else:
+        posts = Post.query.order_by(Post.id.desc()).all()
     return render_template("index.html", posts=posts)
 
 
@@ -114,8 +117,9 @@ def logout():
 
 
 @app.route("/u/<username>")  # pragma: no cover
+@app.route("/u/<username>/posts")
 @check_confirmed  # pragma: no cover
-def user_profile(username):
+def user_profile_posts(username):
     # query user from the database by username
     # if user doesn't exsist throw 404 error
     user = User.query.filter_by(name=username).first_or_404()
@@ -124,9 +128,44 @@ def user_profile(username):
     else:
         user_profile = False
     return render_template(
-            "user_profile.html",
+            "user_profile_posts.html",
             user=user,
             user_profile=user_profile
+        )
+
+
+@app.route('/u/<username>/following')
+@check_confirmed
+def following(username):
+    user = User.query.filter_by(name=username).first_or_404()
+    if current_user.is_authenticated and current_user.name == user.name:
+        user_profile = True
+    else:
+        user_profile = False
+    users = user.following.all()
+    return render_template(
+            "user_following_and_followers.html",
+            user=user,
+            users=users,
+            user_profile=user_profile,
+        )
+
+
+@app.route('/u/<username>/followers')
+@check_confirmed
+def followers(username):
+    user = User.query.filter_by(name=username).first_or_404()
+    if current_user.is_authenticated and current_user.name == user.name:
+        user_profile = True
+    else:
+        user_profile = False
+    users = user.followers.all()
+    return render_template(
+            "user_following_and_followers.html",
+            user=user,
+            user_profile=user_profile,
+            users=users,
+            followers=True
         )
 
 
@@ -148,7 +187,7 @@ def profile_settings(username):
             flash("new settings were successfully applied", "success")
         else:
             flash("settings not changed", "primary")
-        return redirect(url_for("user_profile", username=user.name))
+        return redirect(url_for("user_profile_posts", username=user.name))
     if current_user.is_authenticated and current_user.name == user.name:
         return render_template("profile_settings.html", form=form, user_bio=user.bio)
     else:
@@ -165,6 +204,8 @@ def confirm_email(token):
             flash('Account already confirmed Please login.', 'success')
         else:
             user.confirmed = True
+            # user follow himself to show his posts in the main page
+            user.follow(user)
             db.session.add(user)
             db.session.commit()
             login_user(user)
@@ -193,3 +234,35 @@ def resend_confirmation():
     send_email(current_user.email, subject, html)
     flash('A new confirmation email has been sent', 'success')
     return redirect(url_for('unconfirmed'))
+
+
+@app.route("/u/<username>/follow")  # pragma: no cover 
+@login_required  # pragma: no cover
+@check_confirmed  # pragma: no cover
+def follow(username):
+    user = User.query.filter_by(name=username).first_or_404()
+    if current_user.is_following(user):
+        flash("you are already following {}".format(user.name), "primary")
+        return redirect(url_for("user_profile_posts", username=user.name))
+    else:
+        current_user.follow(user)
+        db.session.add(current_user)
+        db.session.commit()
+        flash("you are successfully followed {}".format(user.name), "success")
+        return redirect(url_for("user_profile_posts", username=user.name))
+
+
+@app.route("/u/<username>/unfollow")  # pragma: no cover
+@login_required  # pragma: no cover
+@check_confirmed  # pragma: no cover
+def unfollow(username):
+    user = User.query.filter_by(name=username).first_or_404()
+    if not current_user.is_following(user):
+        flash('you are not following {}'.format(user.name), "primary")
+        return redirect(url_for("user_profile_posts", username=user.name))
+    else:
+        current_user.unfollow(user)
+        db.session.add(current_user)
+        db.session.commit()
+        flash("you are successfully Unfollowed {}".format(user.name), "success")
+        return redirect(url_for("user_profile_posts", username=user.name))

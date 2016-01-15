@@ -119,5 +119,90 @@ class TestUser(BaseTestCase):
             self.client.get('/unconfirmed', follow_redirects=True)
             self.assertTrue(request.url.endswith('/posts'))
 
+    def test_follow_user(self):
+        with self.client:
+            self.client.post("/login",
+                data=dict(username="admin", password="adminpassword"),
+                follow_redirects=True
+            )
+            self.create_user(
+                name="test_user",
+                email="test@user.com",
+                password="testuserpassword"
+            )
+            admin = User.query.filter_by(name="admin").first()
+            test_user= User.query.filter_by(name="test_user").first()
+            response = self.client.get("/u/test_user/follow",
+                follow_redirects=True
+            )
+            alert = b"you are successfully followed test_user"
+            self.assertIn(alert, response.data)
+            self.assertIn(test_user, admin.following.all())
+            self.assertIn(admin, test_user.followers.all())
+
+    def test_unfollow_user(self):
+        with self.client:
+            self.client.post("/login",
+                data=dict(username="admin", password="adminpassword"),
+                follow_redirects=True
+            )
+            self.create_user(
+                name="test_user",
+                email="test@user.com",
+                password="testuserpassword"
+            )
+            admin = User.query.filter_by(name="admin").first()
+            test_user= User.query.filter_by(name="test_user").first()
+            self.client.get("/u/test_user/follow",
+                follow_redirects=True
+            )
+            response = self.client.get("/u/test_user/unfollow",
+                follow_redirects=True
+            )
+            alert = b"you are successfully Unfollowed test_user"
+            self.assertIn(alert, response.data)
+            self.assertNotIn(test_user, admin.following.all())
+            self.assertNotIn(admin, test_user.followers.all())
+
+    def test_follow_user_is_already_followed(self):
+        self.client.post("/login",
+            data=dict(username="admin", password="adminpassword"),
+            follow_redirects=True
+        )
+        self.create_user(
+            name="test_user",
+            email="test@user.com",
+            password="testuserpassword"
+        )
+        admin = User.query.filter_by(name="admin").first()
+        test_user= User.query.filter_by(name="test_user").first()
+        self.client.get("/u/test_user/follow",
+            follow_redirects=True
+        )
+        response = self.client.get("/u/test_user/follow",
+            follow_redirects=True
+        )
+        alert = b"you are already following test_user"
+        self.assertIn(alert, response.data)
+
+    def test_unfolow_user_is_not_followed(self):
+        self.client.post("/login",
+            data=dict(username="admin", password="adminpassword"),
+            follow_redirects=True
+        )
+        self.create_user(
+            name="test_user",
+            email="test@user.com",
+            password="testuserpassword"
+        )
+        admin = User.query.filter_by(name="admin").first()
+        test_user= User.query.filter_by(name="test_user").first()
+        response = self.client.get("/u/test_user/unfollow",
+            follow_redirects=True
+        )
+        alert = b'you are not following test_user'
+        self.assertIn(alert, response.data)
+
+
 if __name__ == '__main__':
     unittest.main()

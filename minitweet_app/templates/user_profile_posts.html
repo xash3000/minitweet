@@ -1,0 +1,47 @@
+{% extends "user_profile.html" %}
+
+{% block user_content %}
+<ul class="nav nav-tabs col-xs-6 col-xs-offset-3">
+    <li role="presentation" class="active">
+        <a href="{{ url_for('user_profile_posts', username=user.name) }}">
+            posts
+        </a>
+    </li>
+    <li role="presentation">
+        <a href="{{ url_for('following', username=user.name) }}">
+            following
+        </a>
+    </li>
+    <li role="presentation">
+        <a href="{{ url_for('followers', username=user.name) }}">
+            followers
+        </a>
+    </li>
+</ul>
+
+<div class="posts">
+    {% for post in user.posts %}
+        <div class="post text-center col-xs-12">
+            <div class="post-title">
+                <h1>{{ post.title }}</h1>
+            </div>
+
+            <div class="post-author">
+                <a href="/u/{{ post.author.name }}">
+                    <img class="gravatar-img" src="{{ post.author.email | gravatar(size='40') }}">
+                    <h5 style="display:inline-block">{{ post.author.name }}<h5>
+                </a>
+            </div>
+
+            <div class="post-body col-xs-12">
+                <p>{{ post.body }}</p>
+            </div>
+            <div class="likes">
+                <i class="fa fa-2x fa-heart-o heart"></i>
+                <span class="likes-counting">0</span>
+            </div>
+            <div class="sep"></div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -22,6 +22,12 @@ class Post(db.Model):
         return "<Post {}>".format(self.title)
 
 
+followers = db.Table("followers",
+    db.Column("follower_id", db.Integer, db.ForeignKey("users.id")),
+    db.Column("followed_id", db.Integer, db.ForeignKey("users.id"))
+)
+
+
 class User(db.Model):
 
     __tablename__ = "users"  # pragma: no cover
@@ -35,6 +41,12 @@ class User(db.Model):
     # one to many relationship
     posts = db.relationship("Post", backref="author", lazy="dynamic")  # pragma: no cover
     confirmed = db.Column(db.Boolean, nullable=False, default=False)  # pragma: no cover
+    following = db.relationship('User',  # pragma: no cover 
+                               secondary=followers,
+                               primaryjoin=(followers.c.follower_id == id),
+                               secondaryjoin=(followers.c.followed_id == id),
+                               backref=db.backref('followers', lazy='dynamic'),
+                               lazy='dynamic')
 
     def __init__(self, name, email, password, bio='', website="", confirmed=False):
         self.name = name
@@ -45,7 +57,25 @@ class User(db.Model):
         self.website = website
         self.confirmed = confirmed
 
+    def follow(self, user):
+        if not self.is_following(user):
+            self.following.append(user)
+            return self
 
+    def unfollow(self, user):
+        if self.is_following(user):
+            self.following.remove(user)
+            return self
+
+    def is_following(self, user):
+        return self.following.filter(
+                            followers.c.followed_id == user.id).count() > 0
+
+    def get_posts_from_followed_users(self):
+        return Post.query.join(followers,
+            (followers.c.followed_id == Post.author_id)).filter(
+                            followers.c.follower_id == self.id).order_by(
+                                                                Post.id.desc())
     #=========================================#
     #  Flask-Login extension required methods #
     #=========================================#
