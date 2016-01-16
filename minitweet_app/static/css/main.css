@@ -21,6 +21,10 @@ body{
 a{
     text-decoration: none !important;
 }
+
+form{
+    margin: 20px;
+}
 /*=======================================
 ------------- End General Rules ---------
 =========================================*/
@@ -88,10 +92,39 @@ a{
 .btn-primary{
     background-color: #3D9DE6 !important;
     border-color: #3D9DE6 !important;
+    border-radius: 0;
+}
+
+.btn-success{
+    background-color: #23c15d !important;
+    color: #fff;
+    margin-top: 10px;
+    border-radius: 0;
+}
+
+.btn-danger{
+    background-color: #F04124 !important;
+    border-radius: 0;
+    margin-top: 10px;
 }
 
 .nav-tabs{
     margin-top: 30px !important;
+}
+
+.nav-tabs .active a{
+    cursor: pointer !important;
+    border: none !important;
+    border-bottom: 3px solid #3D9DE6 !important;
+}
+
+.nav-tabs a:hover{
+    /* `background-color: none;` is not working and i don't know why
+        if you know tell me
+    */
+    background-color: #fff !important;
+    border: none !important;
+    border-bottom: 3px solid #3D9DE6 !important;
 }
 /*=======================================
 -------- BootStrap Customization --------

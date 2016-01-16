@@ -2,7 +2,7 @@
 
 {% block user_content %}
 {% if followers %}
-<<ul class="nav nav-tabs col-xs-6 col-xs-offset-3">
+<ul class="nav nav-tabs col-xs-6 col-xs-offset-3">
     <li role="presentation">
         <a href="{{ url_for('user_profile_posts', username=user.name) }}">
             posts

@@ -172,25 +172,21 @@ def followers(username):
 
 
 @app.route("/u/<username>/profile_settings", methods=["GET", "POST"])  # pragma: no cover
+@login_required
+@check_confirmed
 def profile_settings(username):
     user = User.query.filter_by(name=username).first_or_404()
     form = ProfileSettings()
     if form.validate_on_submit():
-        changes = False
-        if form.bio.data:
-            user.bio = form.bio.data
-            changes = True
-        if form.website.data:
-            user.website = form.website.data
-            changes = True
+        # POST request
+        user.bio = form.bio.data
+        user.website = form.website.data
         db.session.add(user)
         db.session.commit()
-        if changes:
-            flash("new settings were successfully applied", "success")
-        else:
-            flash("settings not changed", "primary")
+        flash("new settings were successfully applied", "success")
         return redirect(url_for("user_profile_posts", username=user.name))
-    if current_user.is_authenticated and current_user.name == user.name:
+    # GET request
+    if current_user.name == user.name:
         return render_template("profile_settings.html", form=form, user_bio=user.bio)
     else:
         return abort(403)
@@ -250,7 +246,7 @@ def follow(username):
         current_user.follow(user)
         db.session.add(current_user)
         db.session.commit()
-        flash("you are successfully followed {}".format(user.name), "success")
+        flash("you successfully followed {}".format(user.name), "success")
         return redirect(url_for("user_profile_posts", username=user.name))
 
 
@@ -266,5 +262,5 @@ def unfollow(username):
         current_user.unfollow(user)
         db.session.add(current_user)
         db.session.commit()
-        flash("you are successfully Unfollowed {}".format(user.name), "success")
+        flash("you successfully Unfollowed {}".format(user.name), "success")
         return redirect(url_for("user_profile_posts", username=user.name))

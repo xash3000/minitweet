@@ -36,6 +36,10 @@
             {{ form.remember_me }}
         </div>
     </form>
+
+    <div class="col-xs-12 col-md-4 col-md-offset-4" style="margin-top:20px">
+        Don't have an account? <a href="{{ url_for('signup') }}">Sign Up</a>
+    </div>
 </div>
 
 {% endblock %}
