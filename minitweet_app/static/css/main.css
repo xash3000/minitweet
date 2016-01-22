@@ -2,6 +2,10 @@
 +++++++++++++ General Rules +++++++++++++
 =========================================*/
 
+body{
+    background-color: #F2F2F2;
+}
+
 textarea {
     resize: none;
 }
@@ -24,6 +28,12 @@ a{
 
 form{
     margin: 20px;
+}
+
+.form-container{
+    height: 350px;
+    background-color: #fff;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
 }
 /*=======================================
 ------------- End General Rules ---------
@@ -115,6 +125,7 @@ form{
 .nav-tabs .active a{
     cursor: pointer !important;
     border: none !important;
+    background-color: #F2F2F2 !important;
     border-bottom: 3px solid #3D9DE6 !important;
 }
 
@@ -122,7 +133,7 @@ form{
     /* `background-color: none;` is not working and i don't know why
         if you know tell me
     */
-    background-color: #fff !important;
+    background-color: #F2F2F2 !important;
     border: none !important;
     border-bottom: 3px solid #3D9DE6 !important;
 }
@@ -137,11 +148,13 @@ form{
 
 .post{
     padding: 10px;
-    word-break: break-all;
+    background-color: #fff;
+    margin-bottom: 20px;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
 }
 
 .post .post-body{
-    line-height: 20px;
+    line-height: 25px;
     font-size: 20px;
     padding-top: 10px;
 }
@@ -156,24 +169,29 @@ form{
     margin-top: 10px;
     margin-bottom: 10px;
     height: 40px;
+    border: 1px solid #D0D4D9;
+}
+
+.string-field:focus{
+    border: 2px solid #3D9DE6;
 }
 
 .textarea-field{
     margin-top: 20px;
     margin-bottom: 20px;
     height: 150px;
-    border: 1px solid #aaaaaa;
+    border: 1px solid #D0D4D9;
     font-size: 25px;
 }
 
-.sep{
-    margin: 0 auto;
-    background-image: url("../img/sep.png");
-    background-repeat: no-repeat;
-    height: 30px;
-    width: 200px;
-    margin-top: 10px;
+.textarea-field:focus{
+    border: 2px solid #3D9DE6;
 }
+
+.submit{
+    margin-top: 15px;
+}
+
 
 .gravatar-img{
     border-radius: 100%;
@@ -197,11 +215,31 @@ form{
 .user{
     margin-top: 10px;
     margin-bottom: 50px;
+    background-color: #fff;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
+    padding: 10px;
 }
 
 .preview{
     margin-top: 50px;
     overflow: scroll;
+    background-color: #fff;
+}
+
+.user_info{
+    padding: 15px;
+    background-color: #fff;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.user span{
+    font-size: 20px;
+}
+
+.unconfirmed{
+    padding: 15px;
+    background-color: #fff;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
 }
 /*=======================================
 -------- End Author Custom Styles --------

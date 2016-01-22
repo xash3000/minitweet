@@ -2,7 +2,7 @@
 
 {% block user_content %}
 {% if followers %}
-<ul class="nav nav-tabs col-xs-6 col-xs-offset-3">
+<ul class="nav nav-tabs col-xs-6 col-xs-offset-3 col-xs-6 col-md-8 col-md-offset-2">
     <li role="presentation">
         <a href="{{ url_for('user_profile_posts', username=user.name) }}">
             posts
@@ -20,7 +20,7 @@
     </li>
 </ul>
 {% else %}
-<ul class="nav nav-tabs col-xs-6 col-xs-offset-3">
+<ul class="nav nav-tabs col-xs-6 col-xs-offset-3 col-xs-6 col-md-8 col-md-offset-2">
     <li role="presentation">
         <a href="{{ url_for('user_profile_posts', username=user.name) }}">
             posts
@@ -41,18 +41,18 @@
 
 {% set profile_owner=user.name %}
 
-<div class="users col-xs-12">
+<div class="users col-xs-6 col-xs-offset-3 col-xs-6 col-md-8 col-md-offset-2">
     {% for user in users %}
         {% if not(user.name) == profile_owner %}
             <div class="user text-center">
                 <div class="gravatar">
                     <a href="{{ url_for('user_profile_posts', username=user.name) }}">
-                        <img src="{{ user.email | gravatar(size=20) }}" class="gravatar-img">
+                        <img src="{{ user.email | gravatar(size=30) }}" class="gravatar-img">
                     </a>
                 </div>
                 <div class="username">
                     <a href="{{ url_for('user_profile_posts', username=user.name) }}">
-                        <h3>{{ user.name }}</h3>
+                        <span>{{ user.name }}</span>
                     </a>
                     </div>
                 {% if user.bio %}
