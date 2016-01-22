@@ -14,7 +14,7 @@ from . import app, db, bcrypt  # pragma: no cover
 from .models import Post, User  # pragma: no cover
 from .confirmation_token import generate_confirmation_token, confirm_token  # pragma: no cover
 from .email import send_email  # pragma: no cover
-from .decorators import check_confirmed  # pragma: no cover
+from .decorators import check_confirmed, check_user_already_logged_in  # pragma: no cover
 
 @app.route("/")  # pragma: no cover
 @app.route("/posts")  # pragma: no cover
@@ -51,6 +51,7 @@ def publish():
 
 
 @app.route("/login", methods=["GET", "POST"])  # pragma: no cover
+@check_user_already_logged_in
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -71,6 +72,7 @@ def login():
 
 
 @app.route("/signup", methods=["GET", "POST"])  # pragma: no cover
+@check_user_already_logged_in
 def signup():
     form = SignUpForm()
     if form.validate_on_submit():
@@ -117,7 +119,7 @@ def logout():
 
 
 @app.route("/u/<username>")  # pragma: no cover
-@app.route("/u/<username>/posts")  # pragma: no cover 
+@app.route("/u/<username>/posts")  # pragma: no cover
 @check_confirmed  # pragma: no cover
 def user_profile_posts(username):
     # query user from the database by username
