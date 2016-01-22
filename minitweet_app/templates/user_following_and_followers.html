@@ -10,12 +10,18 @@
     </li>
     <li role="presentation">
         <a href="{{ url_for('following', username=user.name) }}">
-            following
+            <!--
+                minus one because every user is following himself by deafult
+            -->
+            {{ user.following.count() - 1}} following
         </a>
     </li>
     <li role="presentation" class="active">
         <a href="{{ url_for('followers', username=user.name) }}">
-            followers
+            <!--
+                minus one because every user is following himself by deafult
+            -->
+            {{ user.followers.count() - 1 }} followers
         </a>
     </li>
 </ul>
@@ -28,12 +34,18 @@
     </li>
     <li role="presentation" class="active">
         <a href="{{ url_for('following', username=user.name) }}">
-            following
+            <!--
+                minus one because every user is following himself by deafult
+            -->
+            {{ user.following.count() - 1}} following
         </a>
     </li>
     <li role="presentation">
         <a href="{{ url_for('followers', username=user.name) }}">
-            followers
+            <!--
+                minus one because every user is following himself by deafult
+            -->
+            {{ user.followers.count() - 1 }} followers
         </a>
     </li>
 </ul>
