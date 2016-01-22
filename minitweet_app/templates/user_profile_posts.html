@@ -4,17 +4,24 @@
 <ul class="nav nav-tabs col-xs-6 col-xs-offset-3 col-md-8 col-md-offset-2">
     <li role="presentation" class="active">
         <a href="{{ url_for('user_profile_posts', username=user.name) }}">
-            posts
+            {{ user.posts.count() }} posts
         </a>
     </li>
     <li role="presentation">
+
         <a href="{{ url_for('following', username=user.name) }}">
-            following
+            <!--
+                minus one because every user is following himself by deafult
+            -->
+            {{ user.following.count() - 1}} following
         </a>
     </li>
     <li role="presentation">
         <a href="{{ url_for('followers', username=user.name) }}">
-            followers
+            <!--
+                minus one because every user is following himself by deafult
+            -->
+            {{ user.followers.count() - 1 }} followers
         </a>
     </li>
 </ul>
