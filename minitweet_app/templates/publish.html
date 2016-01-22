@@ -3,33 +3,37 @@
 {% block content %}
 
 <div class="container">
-    <form method="post">
-        {{ form.hidden_tag() }}
+    <div class="form-container col-xs-12 col-md-8 col-md-offset-2">
+        <form method="post">
+            {{ form.hidden_tag() }}
 
-        <div class="post-title">
-            {{ form.post_title(class_="col-xs-12 col-md-8 col-md-offset-2 string-field", placeholder="post title") }}
-            <span class="error">
-                {% if form.post_title.errors %}
-                    {% for error in form.post_title.errors %}
-                     <p class="col-xs-12 col-md-8 col-md-offset-2">{{ error }}</p>
-                    {% endfor %}
-                {% endif %}
-            </span>
-        </div>
+            <div class="post-title">
+                {{ form.post_title(class_="col-xs-12 string-field", placeholder="post title") }}
+                <span class="error">
+                    {% if form.post_title.errors %}
+                        {% for error in form.post_title.errors %}
+                         <p class="col-xs-12">{{ error }}</p>
+                        {% endfor %}
+                    {% endif %}
+                </span>
+            </div>
 
-        <div class="post-body">
-            {{ form.textarea(class_="col-xs-12 col-md-8 col-md-offset-2 textarea-field", placeholder="your post") }}
-            <span class="error">
-                {% if form.textarea.errors %}
-                    {% for error in form.textarea.errors %}
-                     <p class="col-xs-12 col-md-8 col-md-offset-2">{{ error }}</p>
-                    {% endfor %}
-                {% endif %}
-            </span>
-        </div>
-        <input type="submit" name="submit" value="Publish" class="btn btn-primary col-xs-12 col-md-8 col-md-offset-2 ">
-    </form>
-
+            <div class="post-body">
+                {{ form.textarea(
+                    class_="col-xs-12 textarea-field",
+                    placeholder="your post in markdown"
+                    ) }}
+                <span class="error">
+                    {% if form.textarea.errors %}
+                        {% for error in form.textarea.errors %}
+                         <p class="col-xs-12">{{ error }}</p>
+                        {% endfor %}
+                    {% endif %}
+                </span>
+            </div>
+            <input type="submit" name="submit" value="Publish" class="btn btn-primary col-xs-12">
+        </form>
+    </div>
     <h3 class="text-center col-xs-12 col-md-8 col-md-offset-2">Preview</h3>
     <div class="preview col-xs-12 col-md-8 col-md-offset-2"></div>
 </div>
