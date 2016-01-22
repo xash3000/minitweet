@@ -247,5 +247,20 @@ class TestUser(BaseTestCase):
             user = User.query.filter_by(name="admin").first()
             self.assertTrue(str(user) == '<User admin>')
 
+        def test_user_user_redirects_to_main_page_if_already_logged_in(self):
+            with self.client:
+                self.client.post("/login",
+                        data=dict(username="admin", password="adminpassword"),
+                        follow_redirects=True
+                    )
+
+                msg = b"You are already logged in"
+
+                response1 = self.client.get("/login", follow_redirects=True)
+                self.assertIn(msg, response1.data)
+
+                response2 = self.client.get("/signup", follow_redirects=True)
+                self.assertIn(msg, response2.data)
+
 if __name__ == '__main__':
     unittest.main()
