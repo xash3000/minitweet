@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta charset="utf-8">
         {% if title %}
             <title>{{ title }} - MiniTweet</title>
@@ -60,6 +61,17 @@
       </div>
       <!-- /.container -->
     </nav>
+
+        <noscript>
+            <div class="container">
+                <div class="alert alert-primary text-center">
+                    <a class="close" title="Close" href="#" data-dismiss="alert">×</a>
+                    <span class="msg">
+                        Please Enable Javascript for better experience
+                    </span>
+                </div>
+            </div>
+        </noscript>
 
         <!-- flashed messages -->
         {% for category, msg in get_flashed_messages(with_categories=True) %}

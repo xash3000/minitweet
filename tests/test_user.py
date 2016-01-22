@@ -18,8 +18,13 @@ class TestUser(BaseTestCase):
             self.assert200(response)
 
             # check if user is authenticated
-            self.assertTrue(current_user.is_authenticated)
-
+            self.assertTrue(current_user.is_authenticated())
+            # check if user is active
+            self.assertTrue(current_user.is_active())
+            # check if user is not anonymous
+            self.assertFalse(current_user.is_anonymous())
+            # get user id
+            self.assertEqual(current_user.get_id(), "1")
             # test user redirects to the main page
             self.assertIn('/posts', request.url)
 
@@ -51,18 +56,6 @@ class TestUser(BaseTestCase):
             self.assertEqual(user.website, "http://example.com")
             self.assertIn(b"new settings were successfully applied",
                                                                 response.data)
-
-    def test_user_can_leave_profile_settings_unchanged(self):
-        with self.client:
-            self.client.post("/login",
-                data=dict(username="admin", password="adminpassword"),
-                follow_redirects=True
-            )
-            response = self.client.post("/u/admin/profile_settings",
-                follow_redirects=True
-            )
-            self.assert200(response)
-            self.assertIn(b"settings not changed", response.data)
 
     def test_user_logout(self):
         # login
@@ -135,7 +128,7 @@ class TestUser(BaseTestCase):
             response = self.client.get("/u/test_user/follow",
                 follow_redirects=True
             )
-            alert = b"you are successfully followed test_user"
+            alert = b"you successfully followed test_user"
             self.assertIn(alert, response.data)
             self.assertIn(test_user, admin.following.all())
             self.assertIn(admin, test_user.followers.all())
@@ -159,7 +152,7 @@ class TestUser(BaseTestCase):
             response = self.client.get("/u/test_user/unfollow",
                 follow_redirects=True
             )
-            alert = b"you are successfully Unfollowed test_user"
+            alert = b"you successfully Unfollowed test_user"
             self.assertIn(alert, response.data)
             self.assertNotIn(test_user, admin.following.all())
             self.assertNotIn(admin, test_user.followers.all())
@@ -203,6 +196,56 @@ class TestUser(BaseTestCase):
         alert = b'you are not following test_user'
         self.assertIn(alert, response.data)
 
+
+    def test_followings_and_followers(self):
+        with self.client:
+            self.create_user(name="test1", email="te@st1.com", password="test1t")
+            self.create_user(name="test2", email="te@st2.com", password="test2t")
+            self.client.post("/login",
+                data=dict(username="admin", password="adminpassword"),
+                follow_redirects=True
+            )
+            self.client.get("/u/test1/follow", follow_redirects=True)
+            self.client.get("/u/test2/follow", follow_redirects=True)
+
+            response = self.client.get('/u/admin/following')
+            self.assertIn(b"test1", response.data)
+            self.assertIn(b"test1", response.data)
+
+            response2 = self.client.get('/u/test1/followers')
+            self.assertIn(b"admin", response2.data)
+
+    def test_followings_and_followers2(self):
+        with self.client:
+            self.create_user(
+                            name="test1",
+                            email="te@st1.com",
+                            password="test1t",
+                            confirmed=True)
+            self.client.post("/login",
+                data=dict(username="test1", password="test1t"),
+                follow_redirects=True
+            )
+
+            self.client.get("/u/admin/follow")
+            self.client.get("/logout")
+            self.client.post("/login",
+                data=dict(username="admin", password="adminpassword"),
+                follow_redirects=True
+            )
+            response = self.client.get("/u/admin/followers",
+                follow_redirects=True
+            )
+            self.assertIn(b"test1", response.data)
+
+            response2 = self.client.get("/u/test1/following",
+                follow_redirects=True
+            )
+            self.assertIn(b"admin", response2.data)
+
+        def test__repr__method(self):
+            user = User.query.filter_by(name="admin").first()
+            self.assertTrue(str(user) == '<User admin>')
 
 if __name__ == '__main__':
     unittest.main()

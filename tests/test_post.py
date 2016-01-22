@@ -28,6 +28,10 @@ class TestPost(BaseTestCase):
         self.assertIn(b"test title", response.data)
         self.assertIn(b"test post", response.data)
 
+    def test__repr__method(self):
+        post = Post.query.get(1)
+        self.assertTrue(str(post) == "<Post Test post>")
+
 
 if __name__ == '__main__':
     unittest.main()

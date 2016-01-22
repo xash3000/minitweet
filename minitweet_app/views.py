@@ -117,7 +117,7 @@ def logout():
 
 
 @app.route("/u/<username>")  # pragma: no cover
-@app.route("/u/<username>/posts")
+@app.route("/u/<username>/posts")  # pragma: no cover 
 @check_confirmed  # pragma: no cover
 def user_profile_posts(username):
     # query user from the database by username
@@ -136,8 +136,8 @@ def user_profile_posts(username):
         )
 
 
-@app.route('/u/<username>/following')
-@check_confirmed
+@app.route('/u/<username>/following')  # pragma: no cover
+@check_confirmed  # pragma: no cover
 def following(username):
     user = User.query.filter_by(name=username).first_or_404()
     if current_user.is_authenticated and current_user.name == user.name:
@@ -153,8 +153,8 @@ def following(username):
         )
 
 
-@app.route('/u/<username>/followers')
-@check_confirmed
+@app.route('/u/<username>/followers')  # pragma: no cover
+@check_confirmed  # pragma: no cover
 def followers(username):
     user = User.query.filter_by(name=username).first_or_404()
     if current_user.is_authenticated and current_user.name == user.name:
@@ -172,8 +172,6 @@ def followers(username):
 
 
 @app.route("/u/<username>/profile_settings", methods=["GET", "POST"])  # pragma: no cover
-@login_required
-@check_confirmed
 def profile_settings(username):
     user = User.query.filter_by(name=username).first_or_404()
     form = ProfileSettings()
@@ -186,7 +184,7 @@ def profile_settings(username):
         flash("new settings were successfully applied", "success")
         return redirect(url_for("user_profile_posts", username=user.name))
     # GET request
-    if current_user.name == user.name:
+    if current_user.is_authenticated and current_user.name == user.name:
         return render_template("profile_settings.html", form=form, user_bio=user.bio)
     else:
         return abort(403)
