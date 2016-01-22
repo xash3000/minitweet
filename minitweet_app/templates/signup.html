@@ -37,9 +37,13 @@
                 {% endif %}
             </span>
         </div>
-        
+
         <input type="submit" name="submit" value="Sign Up" class="btn btn-primary col-xs-12 col-md-4 col-md-offset-4">
     </form>
+
+    <div class="col-xs-12 col-md-4 col-md-offset-4" style="margin-top:20px">
+        already have an account? <a href="{{ url_for('login') }}">Login</a>
+    </div>
 </div>
 
 {% endblock %}
