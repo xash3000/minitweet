@@ -6,7 +6,7 @@
 <div class="container">
     <div class="user_info text-center col-xs-6 col-xs-offset-3 col-md-8 col-md-offset-2">
         <div class="gravatar">
-            <img src="{{ user.email | gravatar(size=100) }}" class="gravatar-img">
+            <img src="{{ user.email | gravatar(size=100) }}" class="gravatar-img" alt="user avatar">
         </div>
         <div class="username"><h3>{{ user.name }}</h3></div>
         {% if user.bio %}
