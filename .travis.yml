@@ -2,13 +2,15 @@ language: python
 python:
   - "3.4"
 # command to install dependencies
-install: "pip install -r requirements.txt"
-# command to run tests
-script: "python manage.py test"
+install:
+    - pip install --upgrade pip
+    - pip install -r requirements.txt
+    - pip install coveralls
+# command to run tests with coverage
+script: "python manage.py cov"
 services:
   - postgresql
 before_script:
   - psql -c 'create database travis_ci_test;' -U postgres
-before-install:
-    - sudo apt-get -qq update
-    - sudo apt-get install -y build-essential libffi-dev python-dev
+after_success:
+  coveralls
