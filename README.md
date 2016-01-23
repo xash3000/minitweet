@@ -1,6 +1,6 @@
 # Minitweet
 [![Build Status](https://travis-ci.org/afaki077/minitweet.svg?branch=master)](https://travis-ci.org/afaki077/minitweet)
-
+[![Coverage Status](https://coveralls.io/repos/github/afaki077/minitweet/badge.svg?branch=master)](https://coveralls.io/github/afaki077/minitweet?branch=master)
 [Minitweet](http://minitweet.herokuapp.com) is a twitter clone to flask
 framework.
 
