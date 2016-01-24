@@ -27,13 +27,13 @@ def home():
         posts = current_user.get_posts_from_followed_users()
     else:
         posts = Post.query.order_by(Post.id.desc()).all()
-    return render_template("index.html", posts=posts)
+    return render_template("index.html", posts=posts, title="newest")
 
 
 @app.route("/posts/discover")
 def discover():
     posts = Post.query.order_by(func.random()).limit(20).all()
-    return render_template("index.html", posts=posts)
+    return render_template("index.html", posts=posts, title="discover")
 
 
 @app.route("/publish", methods=["GET", "POST"])  # pragma: no cover
@@ -55,7 +55,7 @@ def publish():
         return redirect(url_for("home"))
     else:
         # GET request
-        return render_template("publish.html", form=form)
+        return render_template("publish.html", form=form, title="publish")
 
 
 @app.route("/login", methods=["GET", "POST"])  # pragma: no cover
@@ -76,7 +76,7 @@ def login():
             # invalid inputs
             flash("Invalid username or password", 'danger')
     # GET request
-    return render_template("login.html", form=form)
+    return render_template("login.html", form=form, title="Login")
 
 
 @app.route("/signup", methods=["GET", "POST"])  # pragma: no cover
@@ -115,7 +115,7 @@ def signup():
         return redirect(url_for("unconfirmed"))
 
     # GET request
-    return render_template("signup.html", form=form)
+    return render_template("signup.html", form=form, title="signup")
 
 
 @app.route('/logout')  # pragma: no cover
@@ -142,7 +142,8 @@ def user_profile_posts(username):
             "user_profile_posts.html",
             user=user,
             user_profile=user_profile,
-            posts=posts
+            posts=posts,
+            title=user.name
         )
 
 
@@ -160,6 +161,7 @@ def following(username):
             user=user,
             users=users,
             user_profile=user_profile,
+            title="{} followings".format(user.name)
         )
 
 
@@ -177,7 +179,8 @@ def followers(username):
             user=user,
             user_profile=user_profile,
             users=users,
-            followers=True
+            followers=True,
+            title="{} followers".format(user.name)
         )
 
 
@@ -195,7 +198,11 @@ def profile_settings(username):
         return redirect(url_for("user_profile_posts", username=user.name))
     # GET request
     if current_user.is_authenticated and current_user.name == user.name:
-        return render_template("profile_settings.html", form=form, user_bio=user.bio)
+        return render_template("profile_settings.html",
+                form=form,
+                user_bio=user.bio,
+                title="profile settings"
+            )
     else:
         return abort(403)
 
@@ -227,7 +234,7 @@ def unconfirmed():
     if current_user.confirmed or not current_user.is_authenticated:
         return redirect(url_for('home'))
     flash('Please confirm your account', 'warning')
-    return render_template('unconfirmed.html')
+    return render_template('unconfirmed.html', title="unconfirmed")
 
 
 @app.route('/resend_confirmation')  # pragma: no cover
