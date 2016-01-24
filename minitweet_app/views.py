@@ -7,6 +7,7 @@ from flask import render_template, redirect, url_for, request, flash, abort \
 from flask.ext.login import (
     login_user, login_required, logout_user, current_user   # pragma: no cover
 )
+from  sqlalchemy.sql.expression import func
 
 # in package imports
 from .forms import PublishForm, SignUpForm, LoginForm, ProfileSettings   # pragma: no cover
@@ -18,6 +19,7 @@ from .decorators import check_confirmed, check_user_already_logged_in  # pragma:
 
 @app.route("/")  # pragma: no cover
 @app.route("/posts")  # pragma: no cover
+@app.route("/posts/newest")  # pragma: no cover
 def home():
     """ Main Page """
     # query all posts in desceding order
@@ -25,6 +27,12 @@ def home():
         posts = current_user.get_posts_from_followed_users()
     else:
         posts = Post.query.order_by(Post.id.desc()).all()
+    return render_template("index.html", posts=posts)
+
+
+@app.route("/posts/discover")
+def discover():
+    posts = Post.query.order_by(func.random()).limit(20).all()
     return render_template("index.html", posts=posts)
 
 

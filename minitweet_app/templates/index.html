@@ -13,29 +13,57 @@
         </div>
     {% endif %}
 
-    <div class="posts">
-        {% for post in posts %}
-            <div class="post text-center col-xs-12 col-md-8 col-md-offset-2">
-                <div class="post-title">
-                    <h1>{{ post.title }}</h1>
-                </div>
+    {% if request.path in ["/", '/posts', '/posts/newest'] %}
+        {% set newest = 'active' %}
+    {% elif request.path == "/posts/discover" %}
+        {% set discover = 'active' %}
+    {% endif %}
 
-                <div class="post-author">
-                    <a href="/u/{{ post.author.name }}">
-                        <img class="gravatar-img" src="{{ post.author.email | gravatar(size='40') }}" alt="user avatar">
-                        <h5 style="display:inline-block">{{ post.author.name }}</h5>
-                    </a>
-                </div>
 
-                <div class="post-body col-xs-12">
-                        {{ post.body | markdown }}
+    <ul class="nav nav-tabs col-xs-12 col-md-8 col-md-offset-2">
+        <li role="presentation" class='{{ newest }}'>
+            <a href="{{ url_for('home') }}">
+                newest
+            </a>
+        </li>
+        <li role="presentation" class="{{ discover }}">
+
+            <a href="{{ url_for('discover') }}">
+                discover
+            </a>
+        </li>
+    </ul>
+
+    {% if posts %}
+        <div class="posts">
+            {% for post in posts %}
+                <div class="post text-center col-xs-12 col-md-8 col-md-offset-2">
+                    <div class="post-title">
+                        <h1>{{ post.title }}</h1>
+                    </div>
+
+                    <div class="post-author">
+                        <a href="/u/{{ post.author.name }}">
+                            <img class="gravatar-img" src="{{ post.author.email | gravatar(size='40') }}" alt="user avatar">
+                            <h5 style="display:inline-block">{{ post.author.name }}</h5>
+                        </a>
+                    </div>
+
+                    <div class="post-body col-xs-12">
+                            {{ post.body | markdown }}
+                    </div>
+                    <div class="likes">
+                        <i class="fa fa-2x fa-heart-o heart"></i>
+                        <span class="likes-counting">0</span>
+                    </div>
                 </div>
-                <div class="likes">
-                    <i class="fa fa-2x fa-heart-o heart"></i>
-                    <span class="likes-counting">0</span>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="col-xs-12 col-md-8 col-md-offset-2">
+            <h1>nothing to show here you may want to</h1>
+            <a href="{{ url_for('discover') }}">Discover new posts</a>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}

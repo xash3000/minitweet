@@ -110,7 +110,7 @@ class TestUser(BaseTestCase):
                 follow_redirects=True
             )
             self.client.get('/unconfirmed', follow_redirects=True)
-            self.assertTrue(request.url.endswith('/posts'))
+            self.assertTrue(request.url.endswith('/posts/newest'))
 
     def test_follow_user(self):
         with self.client:
