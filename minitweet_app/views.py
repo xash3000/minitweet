@@ -26,13 +26,13 @@ def home():
     if current_user.is_authenticated and current_user.confirmed:
         posts = current_user.get_posts_from_followed_users()
     else:
-        posts = Post.query.order_by(Post.id.desc()).all()
+        posts = Post.query.order_by(Post.id.desc())
     return render_template("index.html", posts=posts, title="newest")
 
 
 @app.route("/posts/discover")
 def discover():
-    posts = Post.query.order_by(func.random()).limit(20).all()
+    posts = Post.query.order_by(func.random()).limit(20)
     return render_template("index.html", posts=posts, title="discover")
 
 
