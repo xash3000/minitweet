@@ -26,7 +26,9 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="{{ url_for('home') }}"><span>Minitweet-beta</span></a>
+          <a class="navbar-brand" href="{{ url_for('home') }}">
+              <span><i class="fa fa-home"></i> Minitweet-beta</span>
+          </a>
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -35,6 +37,12 @@
             <li>
                 <a href="{{ url_for('publish') }}">
                     <span><i class="fa fa-plus"></i> Publish</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('discover_users') }}">
+                    <span><i class="fa fa-users"></i> Discover new users</span>
                 </a>
             </li>
             {% endif %}
@@ -48,12 +56,29 @@
                       </a>
                   </li>
                   {% if not current_user.confirmed%}
-                      <li><a href="{{ url_for('unconfirmed') }}"><span>Confirm Email</span></a></li>
+                      <li>
+                          <a href="{{ url_for('unconfirmed') }}">
+                              <span><i class="fa fa-envelope"></i> Confirm Email</span>
+                          </a>
+                      </li>
                   {% endif %}
-                  <li><a href="{{ url_for('logout') }}"><span>Logout</span></a></li>
+                  <li>
+                      <a href="{{ url_for('logout') }}">
+                          <span><i class="fa fa-sign-out"></i> Logout</span>
+                      </a>
+                  </li>
               {% else %}
-                  <li><a href="{{ url_for('signup') }}"><span>Sign up</span></a></li>
-                  <li><a href="{{ url_for('login') }}"><span>Login</span></a></li>
+                  <li>
+                      <a href="{{ url_for('signup') }}">
+                          <span><i class="fa fa-user-plus"></i> Sign up</span>
+                      </a>
+                  </li>
+
+                  <li>
+                      <a href="{{ url_for('login') }}">
+                          <span><i class="fa fa-sign-in"></i> Login</span>
+                      </a>
+                  </li>
               {% endif %}
           </ul>
         </div>

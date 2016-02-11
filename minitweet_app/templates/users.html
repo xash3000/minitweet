@@ -1,0 +1,43 @@
+{% if request.path.endswith('followers') or request.path.endswith('followings') %}
+    {% set current=user.name %}
+{% else %}
+    {% set current=current_user.name %}
+{% endif %}
+
+<div class="users col-xs-12 col-md-8 col-md-offset-2">
+    {% for user in users %}
+        {% if not(user.name) == current %}
+            <div class="user text-center">
+                <div class="gravatar">
+                    <a href="{{ url_for('user_profile_posts', username=user.name) }}">
+                        <img src="{{ user.email | gravatar(size=30) }}" class="gravatar-img">
+                    </a>
+                </div>
+                <div class="username">
+                    <a href="{{ url_for('user_profile_posts', username=user.name) }}">
+                        <span>{{ user.name }}</span>
+                    </a>
+                    </div>
+                {% if user.bio %}
+                    <div class="user_bio"><p>{{ user.bio }}<p></div>
+                {% endif %}
+                {% if user.website %}
+                    <div class="user_website">
+                        <a href="{{ user.website }}" rel="nofollow">{{ user.website }}</a>
+                    </div>
+                {% endif %}
+                {% if current_user.is_authenticated%}
+                    {% if current_user.is_following(user) %}
+                        <a href="{{ url_for('unfollow', username=user.name) }}" class="btn btn-danger">
+                            unfollow
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('follow', username=user.name) }}" class="btn btn-success">
+                            Follow
+                        </a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
