@@ -17,6 +17,9 @@ from .confirmation_token import generate_confirmation_token, confirm_token  # pr
 from .email import send_email  # pragma: no cover
 from .decorators import check_confirmed, check_user_already_logged_in  # pragma: no cover
 
+import re
+
+
 def redirect_back(default='home'):
     return request.args.get('next') or \
            request.referrer or \
@@ -51,7 +54,7 @@ def publish():
     if form.validate_on_submit():
         # POST request
         title = form.post_title.data
-        body = form.textarea.data
+        body = re.sub(r'<[^>]*?>', '', form.textarea.data)
         user_id = current_user.id
         # add new post to the database
         db.session.add(Post(title, body, user_id))
