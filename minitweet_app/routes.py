@@ -17,6 +17,12 @@ from .confirmation_token import generate_confirmation_token, confirm_token  # pr
 from .email import send_email  # pragma: no cover
 from .decorators import check_confirmed, check_user_already_logged_in  # pragma: no cover
 
+def redirect_back(default='home'):
+    return request.args.get('next') or \
+           request.referrer or \
+           url_for(default)
+
+
 @app.route("/")  # pragma: no cover
 @app.route("/posts")  # pragma: no cover
 @app.route("/posts/newest")  # pragma: no cover
@@ -256,15 +262,13 @@ def follow(username):
     user = User.query.filter_by(name=username).first_or_404()
     if current_user.is_following(user):
         flash("you are already following {}".format(user.name), "primary")
-        # redirect to the previous page
-        return redirect(request.referrer)
+        return redirect(redirect_back())
     else:
         current_user.follow(user)
         db.session.add(current_user)
         db.session.commit()
         flash("you successfully followed {}".format(user.name), "success")
-        # redirect to the previous page
-        return redirect(request.referrer)
+        return redirect(redirect_back())
 
 
 @app.route("/u/<username>/unfollow")  # pragma: no cover
@@ -274,15 +278,13 @@ def unfollow(username):
     user = User.query.filter_by(name=username).first_or_404()
     if not current_user.is_following(user):
         flash('you are not following {}'.format(user.name), "primary")
-        # redirect to the previous page
-        return redirect(request.referrer)
+        return redirect(redirect_back())
     else:
         current_user.unfollow(user)
         db.session.add(current_user)
         db.session.commit()
         flash("you successfully Unfollowed {}".format(user.name), "success")
-        # redirect to the previous page
-        return redirect(request.referrer)
+        return redirect(redirect_back())
 
 
 @app.route("/discover_users")  # pragma: no cover
