@@ -34,7 +34,15 @@
         </li>
     </ul>
 
-    {% if posts %}
+    {% if posts.all()|length == 0 %}
+        <div class="col-xs-12 col-md-8 col-md-offset-2">
+            <h3>
+                nothing to show here you may want to
+                <a href="{{ url_for('discover') }}">Discover new posts</a>
+                and follow other people to view their posts here
+            </h3>
+        </div>
+    {% else %}
         <div class="posts">
             {% for post in posts %}
                 <div class="post text-center col-xs-12 col-md-8 col-md-offset-2">
@@ -58,11 +66,6 @@
                     </div>
                 </div>
             {% endfor %}
-        </div>
-    {% else %}
-        <div class="col-xs-12 col-md-8 col-md-offset-2">
-            <h1>nothing to show here you may want to</h1>
-            <a href="{{ url_for('discover') }}">Discover new posts</a>
         </div>
     {% endif %}
 </div>

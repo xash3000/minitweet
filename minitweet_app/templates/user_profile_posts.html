@@ -1,7 +1,7 @@
 {% extends "user_profile.html" %}
 
 {% block user_content %}
-<ul class="nav nav-tabs col-xs-6 col-xs-offset-3 col-md-8 col-md-offset-2">
+<ul class="nav nav-tabs col-xs-12 col-md-8 col-md-offset-2">
     <li role="presentation" class="active">
         <a href="{{ url_for('user_profile_posts', username=user.name) }}">
             {{ user.posts.count() }} posts
