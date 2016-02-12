@@ -12,7 +12,7 @@ class Post(db.Model):
     # ForeignKey
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))  # pragma: no cover
 
-    def __init__(self, title,  body, author_id):
+    def __init__(self, title='',  body='', author_id=1):
         self.title = title
         self.body = body
         self.author_id = author_id
@@ -41,14 +41,15 @@ class User(db.Model):
     # one to many relationship
     posts = db.relationship("Post", backref="author", lazy="dynamic")  # pragma: no cover
     confirmed = db.Column(db.Boolean, nullable=False, default=False)  # pragma: no cover
-    following = db.relationship('User',  # pragma: no cover 
+    following = db.relationship('User',  # pragma: no cover
                                secondary=followers,
                                primaryjoin=(followers.c.follower_id == id),
                                secondaryjoin=(followers.c.followed_id == id),
                                backref=db.backref('followers', lazy='dynamic'),
                                lazy='dynamic')
 
-    def __init__(self, name, email, password, bio='', website="", confirmed=False):
+    def __init__(self, name='', email='', password='', 
+                            bio='', website="", confirmed=False):
         self.name = name
         self.email = email
         # generate one way hash for password
