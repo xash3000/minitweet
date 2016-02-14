@@ -1,5 +1,6 @@
 import os
 
+
 class BaseConfig(object):
     """
     Base Configuration which other configs inherits from it
@@ -13,7 +14,7 @@ class BaseConfig(object):
     SQLALCHEMY_DATABASE_URI = os.environ["DATABASE_URL"]
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
-    #flask-mail settings
+    # flask-mail settings
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 465
     MAIL_USE_TLS = False
@@ -21,7 +22,7 @@ class BaseConfig(object):
     MAIL_DEBUG = True
     MAIL_USERNAME = os.environ["MAIL_USERNAME"]
     MAIL_PASSWORD = os.environ["MAIL_PASSWORD"]
-    MAIL_DEFAULT_SENDER=os.environ["MAIL_DEFAULT_SENDER"]
+    MAIL_DEFAULT_SENDER = os.environ["MAIL_DEFAULT_SENDER"]
 
 
 class DevConfig(BaseConfig):
@@ -33,8 +34,8 @@ class TestConfig(BaseConfig):
         SQLALCHEMY_DATABASE_URI = os.environ["TESTING_DATABASE"]
     except:
         print("you must specify testing database")
-    TESTING=True
-    WTF_CSRF_ENABLED=False
+    TESTING = True
+    WTF_CSRF_ENABLED = False
 
 
 class ProductionConfig(BaseConfig):

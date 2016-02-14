@@ -1,28 +1,30 @@
 # ``# pragma: no cover`` is to exclude lines from coverage test
 # flask imports
 from flask import render_template, redirect, url_for, request, flash, abort \
-  # pragma: no cover
+    # pragma: no cover
 
-#flask.extensions imports
+# flask.extensions imports
 from flask.ext.login import (
     login_user, login_required, logout_user, current_user   # pragma: no cover
 )
-from  sqlalchemy.sql.expression import func
+from sqlalchemy.sql.expression import func
 
 # in package imports
-from .forms import PublishForm, SignUpForm, LoginForm, ProfileSettings   # pragma: no cover
+from .forms import PublishForm, SignUpForm, LoginForm, ProfileSettings \
+    # pragma: no cover
 from . import app, db, bcrypt  # pragma: no cover
 from .models import Post, User  # pragma: no cover
-from .confirmation_token import generate_confirmation_token, confirm_token  # pragma: no cover
+from .confirmation_token import generate_confirmation_token, confirm_token \
+    # pragma: no cover
 from .email import send_email  # pragma: no cover
-from .decorators import check_confirmed, check_user_already_logged_in  # pragma: no cover
-
+from .decorators import check_confirmed, check_user_already_logged_in \
+    # pragma: no cover
 
 
 def redirect_back(default='home'):
     return request.args.get('next') or \
-           request.referrer or \
-           url_for(default)
+        request.referrer or \
+        url_for(default)
 
 
 @app.route("/")  # pragma: no cover
@@ -74,8 +76,9 @@ def login():
         # POST request
         # query user from the database by username
         user = User.query.filter(User.name == form.username.data).first()
-        # check if user exsist and the password match the hash stored in the database
-        if user and bcrypt.check_password_hash(user.password, form.password.data):
+        # check if user exsist and the password match the hash in the database
+        if user and bcrypt.check_password_hash(user.password,
+                                               form.password.data):
                 flash("you were just logged in", 'success')
                 remember = form.remember_me.data
                 login_user(user, remember=remember)
@@ -146,13 +149,12 @@ def user_profile_posts(username):
         user_profile = True
     else:
         user_profile = False
-    return render_template(
-            "user_profile_posts.html",
-            user=user,
-            user_profile=user_profile,
-            posts=posts,
-            title=user.name
-        )
+    return render_template("user_profile_posts.html",
+                           user=user,
+                           user_profile=user_profile,
+                           posts=posts,
+                           title=user.name
+                           )
 
 
 @app.route('/u/<username>/following')  # pragma: no cover
@@ -164,13 +166,12 @@ def following(username):
     else:
         user_profile = False
     users = user.following.all()
-    return render_template(
-            "user_following_and_followers.html",
-            user=user,
-            users=users,
-            user_profile=user_profile,
-            title="{} followings".format(user.name)
-        )
+    return render_template("user_following_and_followers.html",
+                           user=user,
+                           users=users,
+                           user_profile=user_profile,
+                           title="{} followings".format(user.name)
+                           )
 
 
 @app.route('/u/<username>/followers')  # pragma: no cover
@@ -182,17 +183,17 @@ def followers(username):
     else:
         user_profile = False
     users = user.followers.all()
-    return render_template(
-            "user_following_and_followers.html",
-            user=user,
-            user_profile=user_profile,
-            users=users,
-            followers=True,
-            title="{} followers".format(user.name)
-        )
+    return render_template("user_following_and_followers.html",
+                           user=user,
+                           user_profile=user_profile,
+                           users=users,
+                           followers=True,
+                           title="{} followers".format(user.name)
+                           )
 
 
-@app.route("/u/<username>/profile_settings", methods=["GET", "POST"])  # pragma: no cover
+@app.route("/u/<username>/profile_settings", methods=["GET", "POST"]) \
+    # pragma: no cover
 def profile_settings(username):
     user = User.query.filter_by(name=username).first_or_404()
     form = ProfileSettings()
@@ -207,10 +208,10 @@ def profile_settings(username):
     # GET request
     if current_user.is_authenticated and current_user.name == user.name:
         return render_template("profile_settings.html",
-                form=form,
-                user_bio=user.bio,
-                title="profile settings"
-            )
+                               form=form,
+                               user_bio=user.bio,
+                               title="profile settings"
+                               )
     else:
         return abort(403)
 

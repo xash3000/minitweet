@@ -48,7 +48,7 @@ class User(db.Model):
                                backref=db.backref('followers', lazy='dynamic'),
                                lazy='dynamic')
 
-    def __init__(self, name='', email='', password='', 
+    def __init__(self, name='', email='', password='',
                             bio='', website="", confirmed=False):
         self.name = name
         self.email = email
