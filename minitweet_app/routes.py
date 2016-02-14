@@ -1,7 +1,7 @@
 # ``# pragma: no cover`` is to exclude lines from coverage test
 # flask imports
-from flask import render_template, redirect, url_for, request, flash, abort \
-    # pragma: no cover
+from flask import render_template, redirect, url_for, request, flash, abort, \
+    jsonify  # pragma: no cover
 
 # flask.extensions imports
 from flask.ext.login import (
@@ -296,3 +296,17 @@ def unfollow(username):
 def discover_users():
     users = User.query.all()
     return render_template("discover_users.html", users=users)
+
+
+@app.route("/post/<int:post_id>/like", methods=["POST"])
+def like_post(post_id):
+    post = Post.query.get(post_id)
+    if current_user.is_liking(post):
+        current_user.unlike(post)
+        like = False
+    else:
+        current_user.like(post)
+        like = True
+    db.session.add(current_user)
+    db.session.commit()
+    return jsonify({"like": like, "likes_counting": post.likers.count()})

@@ -89,21 +89,29 @@
 
         <noscript>
             <div class="container">
-                <div class="alert alert-primary text-center">
-                    <a class="close" title="Close" href="#" data-dismiss="alert">×</a>
-                    <span class="msg">
-                        Please Enable Javascript for better experience
-                    </span>
+                <div class="message">
+                    <div style="padding: 5px;">
+                        <div class="alert alert-primary text-center static-alert">
+                            <span class="msg">
+                                Please Enable Javascript for better experience
+                            </span>
+                        </div>
+                    </div>
                 </div>
+            </div>
             </div>
         </noscript>
 
         <!-- flashed messages -->
         {% for category, msg in get_flashed_messages(with_categories=True) %}
             <div class="container">
-                <div class="alert alert-{{ category }} text-center">
-                    <a class="close" title="Close" href="#" data-dismiss="alert">×</a>
-                    <span class="msg">{{ msg }}</span>
+                <div class="message flashed-alert">
+                    <div style="padding: 5px;">
+                        <div class="alert alert-{{ category }} text-center">
+                            <a class="close" title="Close" href="#" data-dismiss="alert">×</a>
+                            <span class="msg">{{ msg }}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         {% endfor %}
@@ -113,6 +121,9 @@
         {% endblock %}
 
         <!-- javascript files -->
+        <script type="text/javascript">
+            var root = {{ request.script_root | tojson | safe }}
+        </script>
         <script src="{{ url_for('static', filename='js/jquery-2.2.0.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/main.js') }}"></script>

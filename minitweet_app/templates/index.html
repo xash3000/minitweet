@@ -4,8 +4,7 @@
 {% block content %}
 <div class="container">
     {% if not(current_user.is_authenticated) %}
-        <div class="alert alert-success text-center">
-            <a class="close" title="Close" href="#" data-dismiss="alert">×</a>
+        <div class="alert alert-success text-center static-alert">
             <span class="msg">
                 welcome to minitweet a twitter clone with minimal features
                 <a href="{{ url_for('signup') }}"><span class="alert-link">signup now!</span></a>
@@ -43,35 +42,7 @@
             </h3>
         </div>
     {% else %}
-        <div class="posts">
-            {% for post in posts %}
-                <div class="post text-center col-xs-12 col-md-8 col-md-offset-2">
-                    <div class="post-title">
-                        <h1>{{ post.title }}</h1>
-                    </div>
-
-                    <div class="post-author">
-                        <a href="/u/{{ post.author.name }}">
-                            <img class="gravatar-img" src="{{ post.author.email | gravatar(size='40') }}" alt="user avatar">
-                            <h5 style="display:inline-block">{{ post.author.name }}</h5>
-                        </a>
-                    </div>
-
-                    <div class="post-body col-xs-12">
-                        <!-- support old posts -->
-                        {% if post.id <= 12 %}
-                            {{ post.body | markdown }}
-                        {% else %}
-                            {{ post.body }}
-                        {% endif %}
-                    </div>
-                    <div class="likes">
-                        <i class="fa fa-2x fa-heart-o heart"></i>
-                        <span class="likes-counting">0</span>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
+        {% include "post.html" %}
     {% endif %}
 </div>
 {% endblock %}

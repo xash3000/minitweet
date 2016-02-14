@@ -72,6 +72,8 @@ class User(db.Model):
 
     liked_posts = db.relationship('Post',  # pragma: no cover
                                   secondary=likes,
+                                  primaryjoin=(likes.c.user_id == id),
+                                  secondaryjoin=(likes.c.post_id == Post.id),
                                   backref=db.backref('likers',
                                                      lazy='dynamic'),
                                   lazy='dynamic'
@@ -107,6 +109,19 @@ class User(db.Model):
         filterd = joined.filter(followers.c.follower_id == self.id)
         orderd = filterd.order_by(Post.id.desc())
         return orderd
+
+    def is_liking(self, post):
+        return self.liked_posts.filter(likes.c.post_id == post.id).count() > 0
+
+    def like(self, post):
+        if not self.is_liking(post):
+            self.liked_posts.append(post)
+            return self
+
+    def unlike(self, post):
+        if self.is_liking(post):
+            self.liked_posts.remove(post)
+            return self
 
     # =========================================#
     #  Flask-Login extension required methods #

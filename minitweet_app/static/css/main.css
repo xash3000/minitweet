@@ -4,6 +4,7 @@
 
 body{
     background-color: #F2F2F2;
+    padding-top: 70px;
 }
 
 textarea {
@@ -12,10 +13,6 @@ textarea {
 
 li{
     list-style: none;
-}
-
-body{
-    padding-top: 70px;
 }
 
 .hidden{
@@ -84,6 +81,24 @@ form{
 .alert-success{
     background-color: #23c15d !important;
     color: #fff;
+}
+
+.message {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    width: 100px;
+    margin-bottom: 20px;
+}
+.alert {
+    margin: 0 auto;
+}
+
+.flashed-alert{
+    position: fixed;
+    width: 40%;
+    left: 0;
+    z-index: 4;
 }
 
 .alert-danger{
