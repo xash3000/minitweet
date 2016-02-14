@@ -10,9 +10,10 @@ class Post(db.Model):
     title = db.Column(db.String, nullable=False)  # pragma: no cover
     body = db.Column(db.String, nullable=False)   # pragma: no cover
     # ForeignKey
-    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))  # pragma: no cover
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id')) \
+        # pragma: no cover
 
-    def __init__(self, title='',  body='', author_id=1):
+    def __init__(self, title='', body='', author_id=1):
         self.title = title
         self.body = body
         self.author_id = author_id
@@ -23,9 +24,26 @@ class Post(db.Model):
 
 
 followers = db.Table("followers",
-    db.Column("follower_id", db.Integer, db.ForeignKey("users.id")),
-    db.Column("followed_id", db.Integer, db.ForeignKey("users.id"))
-)
+                     db.Column("follower_id",
+                               db.Integer,
+                               db.ForeignKey("users.id")
+                               ),
+                     db.Column("followed_id",
+                               db.Integer,
+                               db.ForeignKey("users.id")
+                               )
+                     )
+
+likes = db.Table("likes",
+                 db.Column("user_id",
+                           db.Integer,
+                           db.ForeignKey("users.id")
+                           ),
+                 db.Column("post_id",
+                           db.Integer,
+                           db.ForeignKey("posts.id")
+                           ),
+                 )
 
 
 class User(db.Model):
@@ -39,14 +57,25 @@ class User(db.Model):
     bio = db.Column(db.String)  # pragma: no cover
     website = db.Column(db.String)  # pragma: no cover
     # one to many relationship
-    posts = db.relationship("Post", backref="author", lazy="dynamic")  # pragma: no cover
-    confirmed = db.Column(db.Boolean, nullable=False, default=False)  # pragma: no cover
+    posts = db.relationship("Post", backref="author", lazy="dynamic") \
+        # pragma: no cover
+    confirmed = db.Column(db.Boolean, nullable=False, default=False) \
+        # pragma: no cover
     following = db.relationship('User',  # pragma: no cover
-                               secondary=followers,
-                               primaryjoin=(followers.c.follower_id == id),
-                               secondaryjoin=(followers.c.followed_id == id),
-                               backref=db.backref('followers', lazy='dynamic'),
-                               lazy='dynamic')
+                                secondary=followers,
+                                primaryjoin=(followers.c.follower_id == id),
+                                secondaryjoin=(followers.c.followed_id == id),
+                                backref=db.backref('followers',
+                                                   lazy='dynamic'),
+                                lazy='dynamic'
+                                )
+
+    liked_posts = db.relationship('Post',  # pragma: no cover
+                                  secondary=likes,
+                                  backref=db.backref('likers',
+                                                     lazy='dynamic'),
+                                  lazy='dynamic'
+                                  )
 
     def __init__(self, name='', email='', password='',
                             bio='', website="", confirmed=False):
@@ -69,29 +98,28 @@ class User(db.Model):
             return self
 
     def is_following(self, user):
-        return self.following.filter(
-                            followers.c.followed_id == user.id).count() > 0
+        return self.following.filter(followers.c.followed_id == user.id) \
+            .count() > 0
 
     def get_posts_from_followed_users(self):
-        return Post.query.join(followers,
-            (followers.c.followed_id == Post.author_id)).filter(
-                            followers.c.follower_id == self.id).order_by(
-                                                                Post.id.desc())
-    #=========================================#
+        joined = Post.query.join(followers,
+                                 (followers.c.followed_id == Post.author_id))
+        filterd = joined.filter(followers.c.follower_id == self.id)
+        orderd = filterd.order_by(Post.id.desc())
+        return orderd
+
+    # =========================================#
     #  Flask-Login extension required methods #
-    #=========================================#
+    # =========================================#
 
     def is_authenticated(self):
         return True
 
-
     def is_active(self):
         return True
 
-
     def is_anonymous(self):
         return False
-
 
     def get_id(self):
         return str(self.id)

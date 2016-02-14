@@ -13,7 +13,7 @@ class TestUser(BaseTestCase):
                                         data=dict(
                                             username="admin",
                                             password="adminpassword"
-                                                ),
+                                        ),
                                         follow_redirects=True
                                         )
 
@@ -37,10 +37,9 @@ class TestUser(BaseTestCase):
 
     def test_incorrect_login(self):
         response = self.client.post("/login",
-                                    data=dict(
-                                                username="incorrect",
-                                                password="incorrect"
-                                            ),
+                                    data=dict(username="incorrect",
+                                              password="incorrect"
+                                              ),
                                     follow_redirects=True
                                     )
 
@@ -50,17 +49,15 @@ class TestUser(BaseTestCase):
     def test_change_user_profile_info(self):
         with self.client:
             self.client.post("/login",
-                             data=dict(
-                                    username="admin",
-                                    password="adminpassword"
-                                    ),
+                             data=dict(username="admin",
+                                       password="adminpassword"
+                                       ),
                              follow_redirects=True
                              )
             response = self.client.post("/u/admin/profile_settings",
-                                        data=dict(
-                                                bio="test bio",
-                                                website="http://example.com"
-                                                ),
+                                        data=dict(bio="test bio",
+                                                  website="http://example.com"
+                                                  ),
                                         follow_redirects=True
                                         )
             user = User.query.filter_by(name="admin").first()
@@ -85,22 +82,17 @@ class TestUser(BaseTestCase):
 
     def test_publish_page_requires_email_confirmation(self):
         with self.client:
-            self.create_user(
-                    name="unconfirmed_user",
-                    email="unconfirmed@unconfirmed.un",
-                    password="unconfirmed"
-            )
+            self.create_user(name="unconfirmed_user",
+                             email="unconfirmed@unconfirmed.un",
+                             password="unconfirmed"
+                             )
             self.client.post("/login",
-                             data=dict(
-                                    username="admin",
-                                    password="adminpassword"
-                                    ),
+                             data=dict(username="unconfirmed_user",
+                                       password="unconfirmed"
+                                       ),
                              follow_redirects=True
                              )
             response = self.client.get('/publish', follow_redirects=True)
-
-            # check if user redirects to /unconfirmed page
-            self.assertTrue(request.url.endswith('/unconfirmed'))
 
             # test alert is shown
             self.assertIn(b'Please confirm your account', response.data)
@@ -121,10 +113,9 @@ class TestUser(BaseTestCase):
     def test_confirmed_user_redirects_to_mainPage_on_unconfirmed_page(self):
         with self.client:
             self.client.post("/login",
-                             data=dict(
-                                    username="admin",
-                                    password="adminpassword"
-                                    ),
+                             data=dict(username="admin",
+                                       password="adminpassword"
+                                       ),
                              follow_redirects=True
                              )
             self.client.get('/unconfirmed', follow_redirects=True)
@@ -133,10 +124,9 @@ class TestUser(BaseTestCase):
     def test_follow_user(self):
         with self.client:
             self.client.post("/login",
-                             data=dict(
-                                    username="admin",
-                                    password="adminpassword"
-                                    ),
+                             data=dict(username="admin",
+                                       password="adminpassword"
+                                       ),
                              follow_redirects=True
                              )
             self.create_user(
@@ -157,10 +147,9 @@ class TestUser(BaseTestCase):
     def test_unfollow_user(self):
         with self.client:
             self.client.post("/login",
-                             data=dict(
-                                    username="admin",
-                                    password="adminpassword"
-                                    ),
+                             data=dict(username="admin",
+                                       password="adminpassword"
+                                       ),
                              follow_redirects=True
                              )
             self.create_user(
@@ -183,10 +172,9 @@ class TestUser(BaseTestCase):
 
     def test_follow_user_is_already_followed(self):
         self.client.post("/login",
-                         data=dict(
-                                username="admin",
-                                password="adminpassword"
-                                ),
+                         data=dict(username="admin",
+                                   password="adminpassword"
+                                   ),
                          follow_redirects=True
                          )
         self.create_user(
@@ -207,10 +195,9 @@ class TestUser(BaseTestCase):
 
     def test_unfolow_user_is_not_followed(self):
         self.client.post("/login",
-                         data=dict(
-                                username="admin",
-                                password="adminpassword"
-                                ),
+                         data=dict(username="admin",
+                                   password="adminpassword"
+                                   ),
                          follow_redirects=True
                          )
         self.create_user(
@@ -237,10 +224,9 @@ class TestUser(BaseTestCase):
                              password="test2t"
                              )
             self.client.post("/login",
-                             data=dict(
-                                    username="admin",
-                                    password="adminpassword"
-                                    ),
+                             data=dict(username="admin",
+                                       password="adminpassword"
+                                       ),
                              follow_redirects=True
                              )
             self.client.get("/u/test1/follow", follow_redirects=True)
@@ -255,26 +241,23 @@ class TestUser(BaseTestCase):
 
     def test_followings_and_followers2(self):
         with self.client:
-            self.create_user(
-                            name="test1",
-                            email="te@st1.com",
-                            password="test1t",
-                            confirmed=True)
+            self.create_user(name="test1",
+                             email="te@st1.com",
+                             password="test1t",
+                             confirmed=True)
             self.client.post("/login",
-                             data=dict(
-                                    username="admin",
-                                    password="adminpassword"
-                                    ),
+                             data=dict(username="test1",
+                                       password="test1t"
+                                       ),
                              follow_redirects=True
                              )
 
             self.client.get("/u/admin/follow")
             self.client.get("/logout")
             self.client.post("/login",
-                             data=dict(
-                                    username="admin",
-                                    password="adminpassword"
-                                    ),
+                             data=dict(username="admin",
+                                       password="adminpassword"
+                                       ),
                              follow_redirects=True
                              )
             response = self.client.get("/u/admin/followers",
@@ -294,10 +277,9 @@ class TestUser(BaseTestCase):
         def test_user_user_redirects_to_main_page_if_already_logged_in(self):
             with self.client:
                 self.client.post("/login",
-                                 data=dict(
-                                        username="admin",
-                                        password="adminpassword"
-                                        ),
+                                 data=dict(username="admin",
+                                           password="adminpassword"
+                                           ),
                                  follow_redirects=True
                                  )
 
