@@ -20,8 +20,7 @@ login_manager = LoginManager(app)
 login_manager.login_view = "login"
 
 bcrypt = Bcrypt(app)
-gravatar = Gravatar(
-                    app,
+gravatar = Gravatar(app,
                     size=200,
                     rating='g',
                     default='retro',
@@ -29,9 +28,10 @@ gravatar = Gravatar(
                     force_lower=False,
                     use_ssl=True,
                     base_url=None
-             )
+                    )
 mail = Mail(app)
 misaka = Misaka(app)
+
 
 class CustomAdminIndexView(AdminIndexView):
     def is_accessible(self):
@@ -44,18 +44,19 @@ class CustomAdminIndexView(AdminIndexView):
         return abort(403)
 
 admin = Admin(app,
-                name='minitweet',
-                index_view=CustomAdminIndexView(),
-                template_mode="bootstrap3"
-            )
+              name='minitweet',
+              index_view=CustomAdminIndexView(),
+              template_mode="bootstrap3"
+              )
 
 from .models import User, Post
 
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Post, db.session))
 
+
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.filter_by(id= int(user_id)).first()
+    return User.query.get(int(user_id))
 
 from . import routes

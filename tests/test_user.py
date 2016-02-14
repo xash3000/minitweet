@@ -10,9 +10,12 @@ class TestUser(BaseTestCase):
     def test_correct_login(self):
         with self.client:
             response = self.client.post("/login",
-                data=dict(username="admin", password="adminpassword"),
-                follow_redirects=True
-            )
+                                        data=dict(
+                                            username="admin",
+                                            password="adminpassword"
+                                                ),
+                                        follow_redirects=True
+                                        )
 
             # 200 (OK) HTTP status code
             self.assert200(response)
@@ -34,9 +37,12 @@ class TestUser(BaseTestCase):
 
     def test_incorrect_login(self):
         response = self.client.post("/login",
-            data=dict(username="incorrect", password="incorrect"),
-            follow_redirects=True
-        )
+                                    data=dict(
+                                                username="incorrect",
+                                                password="incorrect"
+                                            ),
+                                    follow_redirects=True
+                                    )
 
         # Ensure alert is shown
         self.assertIn(b'Invalid username or password', response.data)
@@ -44,25 +50,31 @@ class TestUser(BaseTestCase):
     def test_change_user_profile_info(self):
         with self.client:
             self.client.post("/login",
-                data=dict(username="admin", password="adminpassword"),
-                follow_redirects=True
-            )
+                             data=dict(
+                                    username="admin",
+                                    password="adminpassword"
+                                    ),
+                             follow_redirects=True
+                             )
             response = self.client.post("/u/admin/profile_settings",
-                data=dict(bio="test bio", website="http://example.com"),
-                follow_redirects=True
-            )
+                                        data=dict(
+                                                bio="test bio",
+                                                website="http://example.com"
+                                                ),
+                                        follow_redirects=True
+                                        )
             user = User.query.filter_by(name="admin").first()
             self.assertEqual(user.bio, "test bio")
             self.assertEqual(user.website, "http://example.com")
-            self.assertIn(b"new settings were successfully applied",
-                                                                response.data)
+            msg = b"new settings were successfully applied"
+            self.assertIn(msg, response.data)
 
     def test_user_logout(self):
         # login
         self.client.post("/login",
-            data=dict(username="admin", password="adminpassword"),
-            follow_redirects=True
-        )
+                         data=dict(username="admin", password="adminpassword"),
+                         follow_redirects=True
+                         )
         # logout
         response = self.client.get("/logout", follow_redirects=True)
         self.assertIn(b"you were just logged out", response.data)
@@ -78,10 +90,13 @@ class TestUser(BaseTestCase):
                     email="unconfirmed@unconfirmed.un",
                     password="unconfirmed"
             )
-            self.client.post('/login',
-                data=dict(username="unconfirmed_user", password="unconfirmed"),
-                follow_redirects=True
-            )
+            self.client.post("/login",
+                             data=dict(
+                                    username="admin",
+                                    password="adminpassword"
+                                    ),
+                             follow_redirects=True
+                             )
             response = self.client.get('/publish', follow_redirects=True)
 
             # check if user redirects to /unconfirmed page
@@ -97,8 +112,8 @@ class TestUser(BaseTestCase):
     def test_profile_settings_only_appear_to_profile_owner(self):
         with self.client:
             response = self.client.get('u/admin/profile_settings',
-                follow_redirects=True
-            )
+                                       follow_redirects=True
+                                       )
 
             # 403 (Forbidden) HTTP status code
             self.assert403(response)
@@ -106,28 +121,34 @@ class TestUser(BaseTestCase):
     def test_confirmed_user_redirects_to_mainPage_on_unconfirmed_page(self):
         with self.client:
             self.client.post("/login",
-                data=dict(username="admin", password="adminpassword"),
-                follow_redirects=True
-            )
+                             data=dict(
+                                    username="admin",
+                                    password="adminpassword"
+                                    ),
+                             follow_redirects=True
+                             )
             self.client.get('/unconfirmed', follow_redirects=True)
             self.assertTrue(request.url.endswith('/posts/newest'))
 
     def test_follow_user(self):
         with self.client:
             self.client.post("/login",
-                data=dict(username="admin", password="adminpassword"),
-                follow_redirects=True
-            )
+                             data=dict(
+                                    username="admin",
+                                    password="adminpassword"
+                                    ),
+                             follow_redirects=True
+                             )
             self.create_user(
                 name="test_user",
                 email="test@user.com",
                 password="testuserpassword"
             )
             admin = User.query.filter_by(name="admin").first()
-            test_user= User.query.filter_by(name="test_user").first()
+            test_user = User.query.filter_by(name="test_user").first()
             response = self.client.get("/u/test_user/follow",
-                follow_redirects=True
-            )
+                                       follow_redirects=True
+                                       )
             alert = b"you successfully followed test_user"
             self.assertIn(alert, response.data)
             self.assertIn(test_user, admin.following.all())
@@ -136,22 +157,25 @@ class TestUser(BaseTestCase):
     def test_unfollow_user(self):
         with self.client:
             self.client.post("/login",
-                data=dict(username="admin", password="adminpassword"),
-                follow_redirects=True
-            )
+                             data=dict(
+                                    username="admin",
+                                    password="adminpassword"
+                                    ),
+                             follow_redirects=True
+                             )
             self.create_user(
                 name="test_user",
                 email="test@user.com",
                 password="testuserpassword"
             )
             admin = User.query.filter_by(name="admin").first()
-            test_user= User.query.filter_by(name="test_user").first()
+            test_user = User.query.filter_by(name="test_user").first()
             self.client.get("/u/test_user/follow",
-                follow_redirects=True
-            )
+                            follow_redirects=True
+                            )
             response = self.client.get("/u/test_user/unfollow",
-                follow_redirects=True
-            )
+                                       follow_redirects=True
+                                       )
             alert = b"you successfully Unfollowed test_user"
             self.assertIn(alert, response.data)
             self.assertNotIn(test_user, admin.following.all())
@@ -159,52 +183,66 @@ class TestUser(BaseTestCase):
 
     def test_follow_user_is_already_followed(self):
         self.client.post("/login",
-            data=dict(username="admin", password="adminpassword"),
-            follow_redirects=True
-        )
+                         data=dict(
+                                username="admin",
+                                password="adminpassword"
+                                ),
+                         follow_redirects=True
+                         )
         self.create_user(
             name="test_user",
             email="test@user.com",
             password="testuserpassword"
         )
         admin = User.query.filter_by(name="admin").first()
-        test_user= User.query.filter_by(name="test_user").first()
+        test_user = User.query.filter_by(name="test_user").first()
         self.client.get("/u/test_user/follow",
-            follow_redirects=True
-        )
+                        follow_redirects=True
+                        )
         response = self.client.get("/u/test_user/follow",
-            follow_redirects=True
-        )
+                                   follow_redirects=True
+                                   )
         alert = b"you are already following test_user"
         self.assertIn(alert, response.data)
 
     def test_unfolow_user_is_not_followed(self):
         self.client.post("/login",
-            data=dict(username="admin", password="adminpassword"),
-            follow_redirects=True
-        )
+                         data=dict(
+                                username="admin",
+                                password="adminpassword"
+                                ),
+                         follow_redirects=True
+                         )
         self.create_user(
             name="test_user",
             email="test@user.com",
             password="testuserpassword"
         )
         admin = User.query.filter_by(name="admin").first()
-        test_user= User.query.filter_by(name="test_user").first()
+        test_user = User.query.filter_by(name="test_user").first()
         response = self.client.get("/u/test_user/unfollow",
-            follow_redirects=True
-        )
+                                   follow_redirects=True
+                                   )
         alert = b'you are not following test_user'
         self.assertIn(alert, response.data)
 
-
     def test_followings_and_followers(self):
         with self.client:
-            self.create_user(name="test1", email="te@st1.com", password="test1t")
-            self.create_user(name="test2", email="te@st2.com", password="test2t")
+            self.create_user(name="test1",
+                             email="te@st1.com",
+                             password="test1t"
+                             )
+            self.create_user(name="test2",
+                             email="te@st2.com",
+                             password="test2t"
+                             )
             self.client.post("/login",
-                data=dict(username="admin", password="adminpassword"),
-                follow_redirects=True
-            )
+                             data=dict(
+                                    username="admin",
+                                    password="adminpassword"
+                                    ),
+                             follow_redirects=True
+                             )
             self.client.get("/u/test1/follow", follow_redirects=True)
             self.client.get("/u/test2/follow", follow_redirects=True)
 
@@ -223,24 +261,30 @@ class TestUser(BaseTestCase):
                             password="test1t",
                             confirmed=True)
             self.client.post("/login",
-                data=dict(username="test1", password="test1t"),
-                follow_redirects=True
-            )
+                             data=dict(
+                                    username="admin",
+                                    password="adminpassword"
+                                    ),
+                             follow_redirects=True
+                             )
 
             self.client.get("/u/admin/follow")
             self.client.get("/logout")
             self.client.post("/login",
-                data=dict(username="admin", password="adminpassword"),
-                follow_redirects=True
-            )
+                             data=dict(
+                                    username="admin",
+                                    password="adminpassword"
+                                    ),
+                             follow_redirects=True
+                             )
             response = self.client.get("/u/admin/followers",
-                follow_redirects=True
-            )
+                                       follow_redirects=True
+                                       )
             self.assertIn(b"test1", response.data)
 
             response2 = self.client.get("/u/test1/following",
-                follow_redirects=True
-            )
+                                        follow_redirects=True
+                                        )
             self.assertIn(b"admin", response2.data)
 
         def test__repr__method(self):
@@ -250,9 +294,12 @@ class TestUser(BaseTestCase):
         def test_user_user_redirects_to_main_page_if_already_logged_in(self):
             with self.client:
                 self.client.post("/login",
-                        data=dict(username="admin", password="adminpassword"),
-                        follow_redirects=True
-                    )
+                                 data=dict(
+                                        username="admin",
+                                        password="adminpassword"
+                                        ),
+                                 follow_redirects=True
+                                 )
 
                 msg = b"You are already logged in"
 

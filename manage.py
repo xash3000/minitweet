@@ -45,6 +45,7 @@ def test_user():
     db.session.add(admin)
     db.session.commit()
 
+
 @manager.command
 def cov():
     """Runs the unit tests with coverage."""

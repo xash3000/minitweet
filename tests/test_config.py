@@ -1,6 +1,7 @@
 import unittest
 from base import BaseTestCase
 
+
 class TestConfigurations(BaseTestCase):
 
     def test_environment_is_testing(self):

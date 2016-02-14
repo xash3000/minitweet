@@ -14,7 +14,12 @@ class BaseTestCase(TestCase):
     def setUp(self):
         app.config.from_object("config.TestConfig")
         db.create_all()
-        self.create_user("admin", "ad@min.com", "adminpassword", confirmed=True)
+        self.create_user(
+                    "admin",
+                    "ad@min.com",
+                    "adminpassword",
+                    confirmed=True
+                    )
         admin = User.query.get(1)
         # user follow himself to show his posts in the main page
         admin.follow(admin)
@@ -28,7 +33,7 @@ class BaseTestCase(TestCase):
         db.drop_all()
 
     def create_user(self, name, email, password,
-                        bio='', website="", confirmed=False):
+                    bio='', website="", confirmed=False):
         app.config.from_object("config.TestConfig")
         u = User(name, email, password, bio, website, confirmed)
         db.session.add(u)

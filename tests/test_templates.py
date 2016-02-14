@@ -1,6 +1,7 @@
 import unittest
 from base import BaseTestCase
 
+
 class TestTemplates(BaseTestCase):
 
     def test_main_page_template(self):
@@ -21,9 +22,12 @@ class TestTemplates(BaseTestCase):
     def test_publish_page_template(self):
         with self.client:
             self.client.post("/login",
-                data=dict(username="admin", password="adminpassword"),
-                follow_redirects=True
-            )
+                             data=dict(
+                                    username="admin",
+                                    password="adminpassword"
+                                    ),
+                             follow_redirects=True
+                             )
             self.client.get("/publish")
             self.assertTemplateUsed("publish.html")
 
@@ -35,9 +39,12 @@ class TestTemplates(BaseTestCase):
     def test_profileSettings_page_template(self):
         with self.client:
             self.client.post("/login",
-                data=dict(username="admin", password="adminpassword"),
-                follow_redirects=True
-            )
+                             data=dict(
+                                    username="admin",
+                                    password="adminpassword"
+                                    ),
+                             follow_redirects=True
+                             )
             self.client.get("/u/admin/profile_settings")
             self.assertTemplateUsed("profile_settings.html")
 
@@ -48,10 +55,13 @@ class TestTemplates(BaseTestCase):
                     email="unconfirmed@unconfirmed.un",
                     password="unconfirmed"
             )
-            self.client.post('/login',
-                data=dict(username="unconfirmed_user", password="unconfirmed"),
-                follow_redirects=True
-            )
+            self.client.post("/login",
+                             data=dict(
+                                    username="admin",
+                                    password="adminpassword"
+                                    ),
+                             follow_redirects=True
+                             )
             self.client.get("/unconfirmed")
             self.assertTemplateUsed("unconfirmed.html")
 

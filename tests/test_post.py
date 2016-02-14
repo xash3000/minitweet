@@ -7,14 +7,17 @@ class TestPost(BaseTestCase):
 
     def test_logged_in_user_can_publish_a_post(self):
         self.client.post("/login",
-            data=dict(username="admin", password="adminpassword"),
-            follow_redirects=True
-        )
+                         data=dict(username="admin", password="adminpassword"),
+                         follow_redirects=True
+                         )
 
         response = self.client.post('/publish',
-            data=dict(post_title="test title", textarea="test post"),
-            follow_redirects=True
-        )
+                                    data=dict(
+                                            post_title="test title",
+                                            textarea="test post"
+                                            ),
+                                    follow_redirects=True
+                                    )
 
         # Ensure post is stored in the database
         post = Post.query.filter_by(title="test title").first()
