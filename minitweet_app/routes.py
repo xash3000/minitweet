@@ -300,13 +300,27 @@ def discover_users():
 
 @app.route("/post/<int:post_id>/like", methods=["POST"])
 def like_post(post_id):
+    msg = None
+    like = None
+    category = None
     post = Post.query.get(post_id)
-    if current_user.is_liking(post):
-        current_user.unlike(post)
-        like = False
+    if current_user.is_authenticated:
+        if current_user.is_liking(post):
+            current_user.unlike(post)
+            like = False
+        else:
+            current_user.like(post)
+            like = True
+        status = "good"
+        db.session.add(current_user)
+        db.session.commit()
     else:
-        current_user.like(post)
-        like = True
-    db.session.add(current_user)
-    db.session.commit()
-    return jsonify({"like": like, "likes_counting": post.likers.count()})
+        status = "error"
+        msg = "Please Login or signup first"
+        category = "warning"
+    return jsonify({"status": status,
+                    "msg": msg,
+                    "category": category,
+                    "like": like,
+                    "likes_counting": post.likers.count()
+                    })

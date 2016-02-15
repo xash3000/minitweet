@@ -86,10 +86,15 @@ form{
 .message {
     position: fixed;
     top: 50px;
-    left: 0;
-    width: 100px;
     margin-bottom: 20px;
 }
+
+@media (max-width: 768px) {
+    .message{
+        width: 100% !important;
+    }
+}
+
 .alert {
     margin: 0 auto;
 }
