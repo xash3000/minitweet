@@ -18,7 +18,7 @@ def check_confirmed(func):
 def check_user_already_logged_in(func):
     @wraps(func)  # pragma: no cover
     def decorated_function(*args, **kwargs):
-        if current_user.is_authenticated or current_user.is_active:
+        if current_user.is_authenticated:
                 flash("You are already logged in", "primary")
                 return redirect(url_for('home'))
         return func(*args, **kwargs)

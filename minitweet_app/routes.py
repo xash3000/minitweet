@@ -258,36 +258,35 @@ def resend_confirmation():
     return redirect(url_for('unconfirmed'))
 
 
-@app.route("/u/<username>/follow")  # pragma: no cover
-@login_required  # pragma: no cover
-@check_confirmed  # pragma: no cover
-def follow(username):
+@app.route("/u/<username>/follow_or_unfollow", methods=["POST"]) \
+    # pragma: no cover
+def follow_or_unfollow(username):
+    msg = None
+    category = None
+    follow = False
     user = User.query.filter_by(name=username).first_or_404()
-    if current_user.is_following(user):
-        flash("you are already following {}".format(user.name), "primary")
-        return redirect(redirect_back())
+    if not current_user.is_authenticated:
+        status = "error"
+        msg = "Please Login or signup first"
+        category = "warning"
+    elif not current_user.confirmed:
+        status = "error"
+        msg = "Please confirm your email first"
+        category = "warning"
     else:
-        current_user.follow(user)
+        status = "good"
+        if not current_user.is_following(user):
+            follow = True
+            current_user.follow(user)
+        elif current_user.is_following(user):
+            current_user.unfollow(user)
         db.session.add(current_user)
         db.session.commit()
-        flash("you successfully followed {}".format(user.name), "success")
-        return redirect(redirect_back())
-
-
-@app.route("/u/<username>/unfollow")  # pragma: no cover
-@login_required  # pragma: no cover
-@check_confirmed  # pragma: no cover
-def unfollow(username):
-    user = User.query.filter_by(name=username).first_or_404()
-    if not current_user.is_following(user):
-        flash('you are not following {}'.format(user.name), "primary")
-        return redirect(redirect_back())
-    else:
-        current_user.unfollow(user)
-        db.session.add(current_user)
-        db.session.commit()
-        flash("you successfully Unfollowed {}".format(user.name), "success")
-        return redirect(redirect_back())
+    return jsonify({"status": status,
+                    "msg": msg,
+                    "category": category,
+                    "follow": follow
+                    })
 
 
 @app.route("/discover_users")  # pragma: no cover
@@ -304,7 +303,15 @@ def like_post(post_id):
     like = None
     category = None
     post = Post.query.get(post_id)
-    if current_user.is_authenticated:
+    if not current_user.is_authenticated:
+        status = "error"
+        msg = "Please Login or signup first"
+        category = "warning"
+    elif not current_user.confirmed:
+        status = "error"
+        msg = "Please confirm your email first"
+        category = "warning"
+    else:
         if current_user.is_liking(post):
             current_user.unlike(post)
             like = False
@@ -314,10 +321,6 @@ def like_post(post_id):
         status = "good"
         db.session.add(current_user)
         db.session.commit()
-    else:
-        status = "error"
-        msg = "Please Login or signup first"
-        category = "warning"
     return jsonify({"status": status,
                     "msg": msg,
                     "category": category,

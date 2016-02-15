@@ -4,7 +4,7 @@
 {% block content %}
 
 <div class="container">
-    <div class="user_info text-center col-xs-12 col-md-8 col-md-offset-2">
+    <div class="user_info text-center col-xs-12 col-md-8 col-md-offset-2" data-username="{{ user.name }}">
         <div class="gravatar">
             <img src="{{ user.email | gravatar(size=100) }}" class="gravatar-img" alt="user avatar">
         </div>
@@ -24,11 +24,11 @@
                 </a>
             {% else %}
                 {% if current_user.is_following(user) %}
-                    <a href="{{ url_for('unfollow', username=user.name) }}" class="btn btn-danger">
+                    <a class="btn btn-danger follow-btn">
                         unfollow
                     </a>
                 {% else %}
-                    <a href="{{ url_for('follow', username=user.name) }}" class="btn btn-success">
+                    <a class="btn btn-success follow-btn">
                         Follow
                     </a>
                 {% endif %}

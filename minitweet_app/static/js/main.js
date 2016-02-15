@@ -45,6 +45,32 @@ $(document).ready(function() {
                 }, "json")
     })
 
+    $('.follow-btn').click(function() {
+        var followBtn = $(this)
+        followBtn.removeClass("btn btn-success btn-danger").addClass('fa fa-3x fa-spinner fa-spin disabled');
+        followBtn.text(null)
+        var username = followBtn.parent().data("username");
+        $.post(
+            // var root defined in templates/base.html
+            root + "/u/" + username + "/follow_or_unfollow",
+            function(data) {
+                followBtn.removeClass('fa fa-3x fa-spinner fa-spin disabled')
+                if (data.status === "good") {
+                    if (data.follow === true){
+                        followBtn.addClass("btn btn-danger")
+                        followBtn.text("Unfollow")
+                    } else if (data.follow === false) {
+                        followBtn.addClass("btn btn-success")
+                        followBtn.text("Follow")
+                    }
+                } else if (data.status === "error") {
+                    followBtn.addClass("btn btn-success follow-btn");
+                    createAlert(data.msg, data.category);
+                }
+            }
+        )
+    })
+
     $('.flashed-alert').ready(function() {
         setTimeout(function() {
             $(".flashed-alert").fadeOut('slow');
