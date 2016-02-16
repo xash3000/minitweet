@@ -13,7 +13,7 @@ from sqlalchemy.sql.expression import func
 from .forms import PublishForm, SignUpForm, LoginForm, ProfileSettings \
     # pragma: no cover
 from . import app, db, bcrypt  # pragma: no cover
-from .models import Post, User  # pragma: no cover
+from .models import Post, User, likes  # pragma: no cover
 from .confirmation_token import generate_confirmation_token, confirm_token \
     # pragma: no cover
 from .email import send_email  # pragma: no cover
@@ -44,6 +44,13 @@ def home():
 def discover():
     posts = Post.query.order_by(func.random()).limit(20)
     return render_template("index.html", posts=posts, title="discover")
+
+
+@app.route("/posts/top")
+def top():
+    query = Post.query.all()
+    posts = sorted(query, key=lambda post: post.likers.count(), reverse=True)
+    return render_template("index.html", posts=posts, title="top")
 
 
 @app.route("/publish", methods=["GET", "POST"])  # pragma: no cover

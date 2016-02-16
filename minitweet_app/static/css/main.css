@@ -263,7 +263,8 @@ form{
 }
 
 .user{
-    margin: 10px;
+    height: 200px;
+    border: 1px solid #dedede;
 }
 /*=======================================
 -------- End Author Custom Styles --------

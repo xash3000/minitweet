@@ -16,6 +16,8 @@
         {% set newest = 'active' %}
     {% elif request.path == "/posts/discover" %}
         {% set discover = 'active' %}
+    {% elif request.path == "/posts/top" %}
+        {% set top = 'active' %}
     {% endif %}
 
 
@@ -25,24 +27,20 @@
                 <i class="fa fa-clock-o"></i> newest
             </a>
         </li>
-        <li role="presentation" class="{{ discover }}">
 
+        <li role="presentation" class="{{ top }}">
+            <a href="{{ url_for('top') }}">
+                <i class="fa fa-heart"></i> Top
+            </a>
+        </li>
+
+        <li role="presentation" class="{{ discover }}">
             <a href="{{ url_for('discover') }}">
                 <i class="fa fa-binoculars"></i> discover
             </a>
         </li>
-    </ul>
 
-    {% if posts.all()|length == 0 %}
-        <div class="col-xs-12 col-md-8 col-md-offset-2">
-            <h3>
-                nothing to show here you may want to
-                <a href="{{ url_for('discover') }}">Discover new posts</a>
-                and follow other people to view their posts here
-            </h3>
-        </div>
-    {% else %}
+    </ul>
         {% include "post.html" %}
-    {% endif %}
 </div>
 {% endblock %}
