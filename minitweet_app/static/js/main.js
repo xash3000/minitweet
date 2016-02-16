@@ -23,19 +23,18 @@ $(document).ready(function() {
 
     $(".heart").click(function() {
             var heart = $(this)
-            heart.removeClass("fa-heart-o fa-heart");
-            heart.addClass("fa-spinner fa-spin disabled");
+            heart.addClass("disabled");
             var postId = heart.closest('.post')[0].id;
             $.post(
                 // var root defined in templates/base.html
                 root + "/post/" + postId + "/like",
                 function(data) {
-                    heart.removeClass("fa-spinner fa-spin fa-heart-o fa-heart disabled fa-3x fa-2x");
+                    heart.removeClass("disabled");
                     if (data.status === "good"){
                         if(data.like){
-                            heart.addClass("fa-heart fa-3x")
+                            heart.addClass("fa-heart fa-3x").removeClass("fa-heart-o fa-2x")
                         } else {
-                            heart.addClass("fa-heart-o fa-2x")
+                            heart.addClass("fa-heart-o fa-2x").removeClass("fa-heart fa-3x")
                         }
                         heart.next().text(data.likes_counting)
                     } else if (data.status === "error") {
@@ -47,20 +46,19 @@ $(document).ready(function() {
 
     $('.follow-btn').click(function() {
         var followBtn = $(this)
-        followBtn.removeClass("btn btn-success btn-danger").addClass('fa fa-3x fa-spinner fa-spin disabled');
-        followBtn.text(null)
+        followBtn.addClass("disabled")
         var username = followBtn.parent().data("username");
         $.post(
             // var root defined in templates/base.html
             root + "/u/" + username + "/follow_or_unfollow",
             function(data) {
-                followBtn.removeClass('fa fa-3x fa-spinner fa-spin disabled')
+                followBtn.removeClass('disabled')
                 if (data.status === "good") {
                     if (data.follow === true){
-                        followBtn.addClass("btn btn-danger")
+                        followBtn.addClass("btn btn-danger").removeClass("btn-success")
                         followBtn.text("Unfollow")
                     } else if (data.follow === false) {
-                        followBtn.addClass("btn btn-success")
+                        followBtn.addClass("btn btn-success").removeClass("btn-danger")
                         followBtn.text("Follow")
                     }
                 } else if (data.status === "error") {
