@@ -4,22 +4,16 @@ $(document).ready(function() {
         var message = $("<div>", {class: "message flashed-alert col-xs-12", display: "inline-block"});
         var div = $("<div>", {style:"padding: 5px;"});
         var _alert = $('<div>', {class: "alert alert-" + category +" text-center"});
-        var a = $("<a>", {class: "close", title: "Close", href: "#", dataDismiss:"alert"}).text('×');
         var span = $("<span>", {class: "msg"}).text(msg);
 
         $("body").append(message);
         message.append(div);
         div.append(_alert);
-        _alert.append(a);
         _alert.append(span);
         setTimeout(function() {
             message.fadeOut('slow');
         }, 3000)
     }
-
-    $('.close').click(function() {
-        $(this).closest(".message").fadeOut()
-    })
 
     $(".heart").click(function() {
             var heart = $(this)

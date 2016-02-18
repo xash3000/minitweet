@@ -214,6 +214,8 @@ def profile_settings(username):
         return redirect(url_for("user_profile_posts", username=user.name))
     # GET request
     if current_user.is_authenticated and current_user.name == user.name:
+        form.website.data = current_user.website
+        form.bio.data = current_user.bio
         return render_template("profile_settings.html",
                                form=form,
                                user_bio=user.bio,
