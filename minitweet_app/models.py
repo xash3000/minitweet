@@ -1,28 +1,6 @@
 # ``# pragma: no cover`` is to exclude lines from coverage test
 from . import db, bcrypt  # pragma: no cover
 
-
-class Post(db.Model):
-
-    __tablename__ = "posts"  # pragma: no cover
-
-    id = db.Column(db.Integer, primary_key=True)  # pragma: no cover
-    title = db.Column(db.String, nullable=False)  # pragma: no cover
-    body = db.Column(db.String, nullable=False)   # pragma: no cover
-    # ForeignKey
-    author_id = db.Column(db.Integer, db.ForeignKey('users.id')) \
-        # pragma: no cover
-
-    def __init__(self, title='', body='', author_id=1):
-        self.title = title
-        self.body = body
-        self.author_id = author_id
-
-    def __repr__(self):
-        # for debugging
-        return "<Post {}>".format(self.title)
-
-
 followers = db.Table("followers",
                      db.Column("follower_id",
                                db.Integer,
@@ -44,6 +22,34 @@ likes = db.Table("likes",
                            db.ForeignKey("posts.id")
                            ),
                  )
+
+
+class Post(db.Model):
+
+    __tablename__ = "posts"  # pragma: no cover
+
+    id = db.Column(db.Integer, primary_key=True)  # pragma: no cover
+    title = db.Column(db.String, nullable=False)  # pragma: no cover
+    body = db.Column(db.String, nullable=False)   # pragma: no cover
+    # ForeignKey
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id')) \
+        # pragma: no cover
+
+    likers = db.relationship('User',  # pragma: no cover
+                             secondary=likes,
+                             backref=db.backref('liked_posts',
+                                                lazy='dynamic'),
+                             lazy='dynamic'
+                             )
+
+    def __init__(self, title='', body='', author_id=1):
+        self.title = title
+        self.body = body
+        self.author_id = author_id
+
+    def __repr__(self):
+        # for debugging
+        return "<Post {}>".format(self.title)
 
 
 class User(db.Model):
@@ -69,15 +75,6 @@ class User(db.Model):
                                                    lazy='dynamic'),
                                 lazy='dynamic'
                                 )
-
-    liked_posts = db.relationship('Post',  # pragma: no cover
-                                  secondary=likes,
-                                  primaryjoin=(likes.c.user_id == id),
-                                  secondaryjoin=(likes.c.post_id == Post.id),
-                                  backref=db.backref('likers',
-                                                     lazy='dynamic'),
-                                  lazy='dynamic'
-                                  )
 
     def __init__(self, name='', email='', password='',
                             bio='', website="", confirmed=False):

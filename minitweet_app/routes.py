@@ -48,8 +48,8 @@ def discover():
 
 @app.route("/posts/top")
 def top():
-    query = Post.query.all()
-    posts = sorted(query, key=lambda post: post.likers.count(), reverse=True)
+    posts = Post.query.join(likes).group_by(Post). \
+        order_by(func.count(likes.c.post_id).desc())
     return render_template("index.html", posts=posts, title="top")
 
 
