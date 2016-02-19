@@ -29,28 +29,55 @@ def redirect_back(default='home'):
 
 @app.route("/")  # pragma: no cover
 @app.route("/posts")  # pragma: no cover
-@app.route("/posts/newest")  # pragma: no cover
-def home():
+@app.route("/posts/newest/<int:page>")  # pragma: no cover
+def home(page=1):
     """ Main Page """
     # query all posts in desceding order
     if current_user.is_authenticated and current_user.confirmed:
         posts = current_user.get_posts_from_followed_users()
     else:
         posts = Post.query.order_by(Post.id.desc())
-    return render_template("index.html", posts=posts, title="newest")
+    per_page = app.config["POSTS_PER_PAGE"]
+    paginated_posts = posts.paginate(page, per_page, error_out=False)
+    next_url = url_for("home", page=page + 1)
+    prev_url = url_for("home", page=page - 1)
+    return render_template("index.html",
+                           posts=paginated_posts,
+                           title="newest",
+                           next_url=next_url,
+                           prev_url=prev_url
+                           )
 
 
-@app.route("/posts/discover")
-def discover():
-    posts = Post.query.order_by(func.random()).limit(20)
-    return render_template("index.html", posts=posts, title="discover")
+@app.route("/posts/discover/<int:page>")
+def discover(page=1):
+    posts = Post.query.order_by(func.random())
+    per_page = app.config["POSTS_PER_PAGE"]
+    paginated_posts = posts.paginate(page, per_page, error_out=False)
+    next_url = url_for("discover", page=page + 1)
+    prev_url = url_for("discover", page=page - 1)
+    return render_template("index.html",
+                           posts=paginated_posts,
+                           title="discover",
+                           next_url=next_url,
+                           prev_url=prev_url
+                           )
 
 
-@app.route("/posts/top")
-def top():
+@app.route("/posts/top/<int:page>")
+def top(page=1):
     posts = Post.query.join(likes).group_by(Post). \
         order_by(func.count(likes.c.post_id).desc())
-    return render_template("index.html", posts=posts, title="top")
+    per_page = app.config["POSTS_PER_PAGE"]
+    paginated_posts = posts.paginate(page, per_page, error_out=False)
+    next_url = url_for("top", page=page + 1)
+    prev_url = url_for("top", page=page - 1)
+    return render_template("index.html",
+                           posts=paginated_posts,
+                           title="top",
+                           next_url=next_url,
+                           prev_url=prev_url
+                           )
 
 
 @app.route("/publish", methods=["GET", "POST"])  # pragma: no cover
@@ -145,13 +172,17 @@ def logout():
 
 
 @app.route("/u/<username>")  # pragma: no cover
-@app.route("/u/<username>/posts")  # pragma: no cover
+@app.route("/u/<username>/posts/<int:page>")  # pragma: no cover
 @check_confirmed  # pragma: no cover
-def user_profile_posts(username):
+def user_profile_posts(username, page=1):
     # query user from the database by username
     # if user doesn't exsist throw 404 error
     user = User.query.filter_by(name=username).first_or_404()
     posts = user.posts.order_by(Post.id.desc())
+    per_page = app.config["POSTS_PER_PAGE"]
+    paginated_posts = posts.paginate(page, per_page, error_out=False)
+    next_url = url_for("user_profile_posts", page=page + 1, username=user.name)
+    prev_url = url_for("user_profile_posts", page=page - 1, username=user.name)
     if current_user.is_authenticated and current_user.name == user.name:
         user_profile = True
     else:
@@ -159,8 +190,10 @@ def user_profile_posts(username):
     return render_template("user_profile_posts.html",
                            user=user,
                            user_profile=user_profile,
-                           posts=posts,
-                           title=user.name
+                           posts=paginated_posts,
+                           title=user.name,
+                           next_url=next_url,
+                           prev_url=prev_url
                            )
 
 
@@ -250,7 +283,7 @@ def confirm_email(token):
 @login_required  # pragma: no cover
 def unconfirmed():
     if current_user.confirmed or not current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('home', page=1))
     flash('Please confirm your account', 'warning')
     return render_template('unconfirmed.html', title="unconfirmed")
 

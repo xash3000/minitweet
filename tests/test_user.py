@@ -119,7 +119,7 @@ class TestUser(BaseTestCase):
                              follow_redirects=True
                              )
             self.client.get('/unconfirmed', follow_redirects=True)
-            self.assertTrue(request.url.endswith('/posts/newest'))
+            self.assertIn('/posts/newest', request.url)
 
         def test__repr__method(self):
             user = User.query.filter_by(name="admin").first()

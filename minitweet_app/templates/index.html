@@ -12,30 +12,30 @@
         </div>
     {% endif %}
 
-    {% if request.path in ["/", '/posts', '/posts/newest'] %}
+    {% if request.path in ["/", '/posts'] or "posts/newest" in request.path %}
         {% set newest = 'active' %}
-    {% elif request.path == "/posts/discover" %}
+    {% elif "/posts/discover" in request.path %}
         {% set discover = 'active' %}
-    {% elif request.path == "/posts/top" %}
+    {% elif "/posts/top" in request.path %}
         {% set top = 'active' %}
     {% endif %}
 
 
     <ul class="nav nav-tabs col-xs-12 col-md-8 col-md-offset-2">
         <li role="presentation" class='{{ newest }}'>
-            <a href="{{ url_for('home') }}">
+            <a href="{{ url_for('home', page=1) }}">
                 <i class="fa fa-clock-o"></i> newest
             </a>
         </li>
 
         <li role="presentation" class="{{ top }}">
-            <a href="{{ url_for('top') }}">
+            <a href="{{ url_for('top', page=1) }}">
                 <i class="fa fa-heart"></i> Top
             </a>
         </li>
 
         <li role="presentation" class="{{ discover }}">
-            <a href="{{ url_for('discover') }}">
+            <a href="{{ url_for('discover', page=1) }}">
                 <i class="fa fa-binoculars"></i> discover
             </a>
         </li>
