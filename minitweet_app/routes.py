@@ -7,7 +7,7 @@ from flask import render_template, redirect, url_for, request, flash, abort, \
 from flask.ext.login import (
     login_user, login_required, logout_user, current_user   # pragma: no cover
 )
-from sqlalchemy.sql.expression import func
+from sqlalchemy.sql.expression import func  # pragma: no cover
 
 # in package imports
 from .forms import PublishForm, SignUpForm, LoginForm, ProfileSettings \
@@ -21,12 +21,6 @@ from .decorators import check_confirmed, check_user_already_logged_in \
     # pragma: no cover
 
 
-def redirect_back(default='home'):
-    return request.args.get('next') or \
-        request.referrer or \
-        url_for(default)
-
-
 @app.route("/")  # pragma: no cover
 @app.route("/posts")  # pragma: no cover
 @app.route("/posts/newest/<int:page>")  # pragma: no cover
@@ -38,7 +32,7 @@ def home(page=1):
     else:
         posts = Post.query.order_by(Post.id.desc())
     per_page = app.config["POSTS_PER_PAGE"]
-    paginated_posts = posts.paginate(page, per_page, error_out=False)
+    paginated_posts = posts.paginate(page, per_page)
     next_url = url_for("home", page=page + 1)
     prev_url = url_for("home", page=page - 1)
     return render_template("index.html",
@@ -49,11 +43,11 @@ def home(page=1):
                            )
 
 
-@app.route("/posts/discover/<int:page>")
+@app.route("/posts/discover/<int:page>")  # pragma: no cover
 def discover(page=1):
     posts = Post.query.order_by(func.random())
     per_page = app.config["POSTS_PER_PAGE"]
-    paginated_posts = posts.paginate(page, per_page, error_out=False)
+    paginated_posts = posts.paginate(page, per_page)
     next_url = url_for("discover", page=page + 1)
     prev_url = url_for("discover", page=page - 1)
     return render_template("index.html",
@@ -64,12 +58,12 @@ def discover(page=1):
                            )
 
 
-@app.route("/posts/top/<int:page>")
+@app.route("/posts/top/<int:page>")  # pragma: no cover
 def top(page=1):
     posts = Post.query.join(likes).group_by(Post). \
         order_by(func.count(likes.c.post_id).desc())
     per_page = app.config["POSTS_PER_PAGE"]
-    paginated_posts = posts.paginate(page, per_page, error_out=False)
+    paginated_posts = posts.paginate(page, per_page)
     next_url = url_for("top", page=page + 1)
     prev_url = url_for("top", page=page - 1)
     return render_template("index.html",
@@ -103,7 +97,7 @@ def publish():
 
 
 @app.route("/login", methods=["GET", "POST"])  # pragma: no cover
-@check_user_already_logged_in
+@check_user_already_logged_in  # pragma: no cover
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -125,7 +119,7 @@ def login():
 
 
 @app.route("/signup", methods=["GET", "POST"])  # pragma: no cover
-@check_user_already_logged_in
+@check_user_already_logged_in  # pragma: no cover
 def signup():
     form = SignUpForm()
     if form.validate_on_submit():
@@ -180,7 +174,7 @@ def user_profile_posts(username, page=1):
     user = User.query.filter_by(name=username).first_or_404()
     posts = user.posts.order_by(Post.id.desc())
     per_page = app.config["POSTS_PER_PAGE"]
-    paginated_posts = posts.paginate(page, per_page, error_out=False)
+    paginated_posts = posts.paginate(page, per_page)
     next_url = url_for("user_profile_posts", page=page + 1, username=user.name)
     prev_url = url_for("user_profile_posts", page=page - 1, username=user.name)
     if current_user.is_authenticated and current_user.name == user.name:
@@ -339,7 +333,7 @@ def discover_users():
     return render_template("discover_users.html", users=users)
 
 
-@app.route("/post/<int:post_id>/like", methods=["POST"])
+@app.route("/post/<int:post_id>/like", methods=["POST"])  # pragma: no cover
 def like_post(post_id):
     msg = None
     like = None

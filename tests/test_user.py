@@ -3,27 +3,107 @@ from base import BaseTestCase
 from minitweet_app.models import User
 from flask.ext.login import current_user
 from flask import request
+from minitweet_app.models import Post
+import json
 
 
-class TestUser(BaseTestCase):
+class TestUserMethods(BaseTestCase):
+
+    def test__repr__method(self):
+        admin = User.query.filter_by(name="admin").first()
+        self.assertTrue(str(admin) == '<User admin>')
+
+    def test_follow_method(self):
+        admin = User.query.filter_by(name="admin").first()
+        self.create_user("test_user", "test_user", "test_user")
+        test_user = User.query.filter_by(name="test_user").first()
+        admin.follow(test_user)
+        test_user.follow(admin)
+
+        self.assertIn(test_user, admin.following)
+        self.assertIn(admin, test_user.following)
+
+    def test_unfollow_method(self):
+        admin = User.query.filter_by(name="admin").first()
+        self.create_user("test_user", "test_user", "test_user")
+        test_user = User.query.filter_by(name="test_user").first()
+
+        admin.follow(test_user)
+        test_user.follow(admin)
+
+        admin.unfollow(test_user)
+        test_user.unfollow(admin)
+
+        self.assertNotIn(test_user, admin.following)
+        self.assertNotIn(admin, test_user.following)
+
+    def test_is_following_method(self):
+        admin = User.query.filter_by(name="admin").first()
+        self.create_user("test_user", "test_user", "test_user")
+        test_user = User.query.filter_by(name="test_user").first()
+
+        admin.follow(test_user)
+
+        self.assertTrue(admin.is_following(test_user))
+        self.assertFalse(test_user.is_following(admin))
+
+    def test_get_posts_from_followed_users_method(self):
+        admin = User.query.filter_by(name="admin").first()
+        self.create_user("test_user", "test_user", "test_user")
+        self.create_user("test_user2", "test_user2", "test_user2")
+        test_user = User.query.filter_by(name="test_user").first()
+        test_user2 = User.query.filter_by(name="test_user2").first()
+
+        admin.follow(test_user)
+        admin.follow(test_user2)
+
+        self.create_post("test1", "test1", test_user.id)
+        self.create_post("test2", "test2", test_user.id)
+        self.create_post("test3", "test3", test_user2.id)
+        posts = admin.get_posts_from_followed_users().all()
+        expcected = test_user2.posts.order_by(Post.id.desc()).all() + \
+            test_user.posts.order_by(Post.id.desc()).all()
+
+        self.assertEqual(posts, expcected)
+
+    def test_is_liking_method(self):
+        admin = User.query.filter_by(name="admin").first()
+        self.create_post('test1', 'test1', admin.id)
+        self.create_post('test2', 'test2', admin.id)
+        post = Post.query.filter_by(title='test1').first()
+        post2 = Post.query.filter_by(title='test2').first()
+        admin.liked_posts.append(post)
+
+        self.assertTrue(admin.is_liking(post))
+        self.assertFalse(admin.is_liking(post2))
+
+    def test_like_method(self):
+        admin = User.query.filter_by(name="admin").first()
+        self.create_post('test1', 'test1', admin.id)
+        post = Post.query.filter_by(title='test1').first()
+        admin.like(post)
+        self.assertTrue(admin.is_liking(post))
+
+    def test_unlike_method(self):
+        admin = User.query.filter_by(name="admin").first()
+        self.create_post('test1', 'test1', admin.id)
+        post = Post.query.filter_by(title='test1').first()
+        admin.like(post)
+        admin.unlike(post)
+        self.assertFalse(admin.is_liking(post))
+
+
+class TestUserViews(BaseTestCase):
 
     def test_correct_login(self):
         with self.client:
-            response = self.client.post("/login",
-                                        data=dict(
-                                            username="admin",
-                                            password="adminpassword"
-                                        ),
-                                        follow_redirects=True
-                                        )
+            response = self.login("admin", "adminpassword")
 
             # 200 (OK) HTTP status code
             self.assert200(response)
 
             # check if user is authenticated
             self.assertTrue(current_user.is_authenticated())
-            # check if user is active
-            self.assertTrue(current_user.is_active())
             # check if user is not anonymous
             self.assertFalse(current_user.is_anonymous())
             # get user id
@@ -36,24 +116,14 @@ class TestUser(BaseTestCase):
             self.assertIn(b'you were just logged in', response.data)
 
     def test_incorrect_login(self):
-        response = self.client.post("/login",
-                                    data=dict(username="incorrect",
-                                              password="incorrect"
-                                              ),
-                                    follow_redirects=True
-                                    )
+        response = self.login("incorrect", "incorrect")
 
         # Ensure alert is shown
         self.assertIn(b'Invalid username or password', response.data)
 
     def test_change_user_profile_info(self):
         with self.client:
-            self.client.post("/login",
-                             data=dict(username="admin",
-                                       password="adminpassword"
-                                       ),
-                             follow_redirects=True
-                             )
+            self.login("admin", "adminpassword")
             response = self.client.post("/u/admin/profile_settings",
                                         data=dict(bio="test bio",
                                                   website="http://example.com"
@@ -68,10 +138,7 @@ class TestUser(BaseTestCase):
 
     def test_user_logout(self):
         # login
-        self.client.post("/login",
-                         data=dict(username="admin", password="adminpassword"),
-                         follow_redirects=True
-                         )
+        self.login("admin", "adminpassword")
         # logout
         response = self.client.get("/logout", follow_redirects=True)
         self.assertIn(b"you were just logged out", response.data)
@@ -86,12 +153,7 @@ class TestUser(BaseTestCase):
                              email="unconfirmed@unconfirmed.un",
                              password="unconfirmed"
                              )
-            self.client.post("/login",
-                             data=dict(username="unconfirmed_user",
-                                       password="unconfirmed"
-                                       ),
-                             follow_redirects=True
-                             )
+            self.login("unconfirmed_user", "unconfirmed")
             response = self.client.get('/publish', follow_redirects=True)
 
             # test alert is shown
@@ -112,35 +174,78 @@ class TestUser(BaseTestCase):
 
     def test_confirmed_user_redirects_to_mainPage_on_unconfirmed_page(self):
         with self.client:
-            self.client.post("/login",
-                             data=dict(username="admin",
-                                       password="adminpassword"
-                                       ),
-                             follow_redirects=True
-                             )
+            self.login("admin", "adminpassword")
             self.client.get('/unconfirmed', follow_redirects=True)
             self.assertIn('/posts/newest', request.url)
 
-        def test__repr__method(self):
-            user = User.query.filter_by(name="admin").first()
-            self.assertTrue(str(user) == '<User admin>')
+    def test_user_redirects_to_main_page_if_already_logged_in(self):
+        with self.client:
+            self.login("admin", "adminpassword")
 
-        def test_user_user_redirects_to_main_page_if_already_logged_in(self):
-            with self.client:
-                self.client.post("/login",
-                                 data=dict(username="admin",
-                                           password="adminpassword"
-                                           ),
-                                 follow_redirects=True
-                                 )
+            msg = b"You are already logged in"
 
-                msg = b"You are already logged in"
+            response1 = self.client.get("/login", follow_redirects=True)
+            self.assertIn(msg, response1.data)
 
-                response1 = self.client.get("/login", follow_redirects=True)
-                self.assertIn(msg, response1.data)
+            response2 = self.client.get("/signup", follow_redirects=True)
+            self.assertIn(msg, response2.data)
 
-                response2 = self.client.get("/signup", follow_redirects=True)
-                self.assertIn(msg, response2.data)
+    def test_follow_user_with_logged_in_and_confirmed_user(self):
+        with self.client:
+            self.login("admin", "adminpassword")
+            admin = User.query.filter_by(name="admin").first()
+            self.create_user("test_user", "test_user", "test_user")
+            test_user = User.query.filter_by(name="test_user").first()
+            response = self.client.post("/u/test_user/follow_or_unfollow")
+            expcected = {"status": "good",
+                         "msg": None,
+                         "category": None,
+                         "follow": True
+                         }
+            self.assertTrue(admin.is_following(test_user))
+            self.client.post("/u/test_user/follow_or_unfollow")
+            self.assertFalse(admin.is_following(test_user))
+
+            # response.data is not str it is Bytes object so we \
+            # need to decode it first
+            returned_json = json.loads(response.data.decode())
+            self.assertEqual(returned_json, expcected)
+
+    def test_follow_user_with_not_logged_in_user(self):
+        with self.client:
+            admin = User.query.filter_by(name="admin").first()
+            self.create_user("test_user", "test_user", "test_user")
+            test_user = User.query.filter_by(name="test_user").first()
+            response = self.client.post("/u/test_user/follow_or_unfollow")
+            expcected = {"status": "error",
+                         "msg": "Please Login or signup first",
+                         "category": "warning",
+                         "follow": False
+                         }
+            self.assertFalse(admin.is_following(test_user))
+            # response.data is not str it is Bytes object so we \
+            # need to decode it first
+            returned_json = json.loads(response.data.decode())
+            self.assertEqual(returned_json, expcected)
+
+    def test_follow_user_with_unconfirmed_user(self):
+        with self.client:
+            admin = User.query.filter_by(name="admin").first()
+            self.create_user("test_user", "test_user", "test_user")
+            test_user = User.query.filter_by(name="test_user").first()
+            self.login("test_user", "test_user")
+            response = self.client.post("/u/admin/follow_or_unfollow")
+            expcected = {"status": "error",
+                         "msg": "Please confirm your email first",
+                         "category": "warning",
+                         "follow": False
+                         }
+            self.assertFalse(test_user.is_following(admin))
+            # response.data is not str it is Bytes object so we \
+            # need to decode it first
+            returned_json = json.loads(response.data.decode())
+            self.assertEqual(returned_json, expcected)
+
 
 if __name__ == '__main__':
     unittest.main()

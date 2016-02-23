@@ -1,7 +1,7 @@
 # ``# pragma: no cover`` is to exclude lines from coverage test
 from . import db, bcrypt  # pragma: no cover
 
-followers = db.Table("followers",
+followers = db.Table("followers",               # pragma: no cover
                      db.Column("follower_id",
                                db.Integer,
                                db.ForeignKey("users.id")
@@ -12,7 +12,7 @@ followers = db.Table("followers",
                                )
                      )
 
-likes = db.Table("likes",
+likes = db.Table("likes",                       # pragma: no cover
                  db.Column("user_id",
                            db.Integer,
                            db.ForeignKey("users.id")
