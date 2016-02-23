@@ -24,9 +24,13 @@ class BaseConfig(object):
     MAIL_PASSWORD = os.environ["MAIL_PASSWORD"]
     MAIL_DEFAULT_SENDER = os.environ["MAIL_DEFAULT_SENDER"]
 
+    # app settings
+    POSTS_PER_PAGE = 20
+
 
 class DevConfig(BaseConfig):
     DEBUG = True
+    POSTS_PER_PAGE = 3
 
 
 class TestConfig(BaseConfig):
@@ -36,6 +40,7 @@ class TestConfig(BaseConfig):
         print("you must specify testing database")
     TESTING = True
     WTF_CSRF_ENABLED = False
+    POSTS_PER_PAGE = 3
 
 
 class ProductionConfig(BaseConfig):

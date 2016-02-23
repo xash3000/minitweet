@@ -4,6 +4,8 @@
 
 body{
     background-color: #F2F2F2;
+    padding-top: 70px;
+    padding-bottom: 40px;
 }
 
 textarea {
@@ -12,10 +14,6 @@ textarea {
 
 li{
     list-style: none;
-}
-
-body{
-    padding-top: 70px;
 }
 
 .hidden{
@@ -84,6 +82,29 @@ form{
 .alert-success{
     background-color: #23c15d !important;
     color: #fff;
+}
+
+.message {
+    position: fixed;
+    top: 50px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .message{
+        width: 100% !important;
+    }
+}
+
+.alert {
+    margin: 0 auto;
+}
+
+.flashed-alert{
+    position: fixed;
+    width: 40%;
+    left: 0;
+    z-index: 4;
 }
 
 .alert-danger{
@@ -240,6 +261,11 @@ form{
     padding: 15px;
     background-color: #fff;
     box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.user{
+    height: 200px;
+    border: 1px solid #dedede;
 }
 /*=======================================
 -------- End Author Custom Styles --------

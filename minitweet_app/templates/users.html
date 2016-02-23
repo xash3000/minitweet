@@ -7,7 +7,7 @@
 <div class="users col-xs-12 col-md-8 col-md-offset-2">
     {% for user in users %}
         {% if not(user.name) == current %}
-            <div class="user text-center">
+            <div class="user text-center col-xs-12 col-sm-6 col-md-4" data-username="{{ user.name }}">
                 <div class="gravatar">
                     <a href="{{ url_for('user_profile_posts', username=user.name) }}">
                         <img src="{{ user.email | gravatar(size=30) }}" class="gravatar-img">
@@ -28,11 +28,11 @@
                 {% endif %}
                 {% if current_user.is_authenticated%}
                     {% if current_user.is_following(user) %}
-                        <a href="{{ url_for('unfollow', username=user.name) }}" class="btn btn-danger">
+                        <a class="btn btn-danger follow-btn">
                             unfollow
                         </a>
                     {% else %}
-                        <a href="{{ url_for('follow', username=user.name) }}" class="btn btn-success">
+                        <a class="btn btn-success follow-btn">
                             Follow
                         </a>
                     {% endif %}

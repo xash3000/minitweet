@@ -1,19 +1,19 @@
 # ``# pragma: no cover`` is to exclude lines from coverage test
 # flask imports
-from flask import render_template, redirect, url_for, request, flash, abort \
-    # pragma: no cover
+from flask import render_template, redirect, url_for, request, flash, abort, \
+    jsonify  # pragma: no cover
 
 # flask.extensions imports
 from flask.ext.login import (
     login_user, login_required, logout_user, current_user   # pragma: no cover
 )
-from sqlalchemy.sql.expression import func
+from sqlalchemy.sql.expression import func  # pragma: no cover
 
 # in package imports
 from .forms import PublishForm, SignUpForm, LoginForm, ProfileSettings \
     # pragma: no cover
 from . import app, db, bcrypt  # pragma: no cover
-from .models import Post, User  # pragma: no cover
+from .models import Post, User, likes  # pragma: no cover
 from .confirmation_token import generate_confirmation_token, confirm_token \
     # pragma: no cover
 from .email import send_email  # pragma: no cover
@@ -21,29 +21,57 @@ from .decorators import check_confirmed, check_user_already_logged_in \
     # pragma: no cover
 
 
-def redirect_back(default='home'):
-    return request.args.get('next') or \
-        request.referrer or \
-        url_for(default)
-
-
 @app.route("/")  # pragma: no cover
 @app.route("/posts")  # pragma: no cover
-@app.route("/posts/newest")  # pragma: no cover
-def home():
+@app.route("/posts/newest/<int:page>")  # pragma: no cover
+def home(page=1):
     """ Main Page """
     # query all posts in desceding order
     if current_user.is_authenticated and current_user.confirmed:
         posts = current_user.get_posts_from_followed_users()
     else:
         posts = Post.query.order_by(Post.id.desc())
-    return render_template("index.html", posts=posts, title="newest")
+    per_page = app.config["POSTS_PER_PAGE"]
+    paginated_posts = posts.paginate(page, per_page)
+    next_url = url_for("home", page=page + 1)
+    prev_url = url_for("home", page=page - 1)
+    return render_template("index.html",
+                           posts=paginated_posts,
+                           title="newest",
+                           next_url=next_url,
+                           prev_url=prev_url
+                           )
 
 
-@app.route("/posts/discover")
-def discover():
-    posts = Post.query.order_by(func.random()).limit(20)
-    return render_template("index.html", posts=posts, title="discover")
+@app.route("/posts/discover/<int:page>")  # pragma: no cover
+def discover(page=1):
+    posts = Post.query.order_by(func.random())
+    per_page = app.config["POSTS_PER_PAGE"]
+    paginated_posts = posts.paginate(page, per_page)
+    next_url = url_for("discover", page=page + 1)
+    prev_url = url_for("discover", page=page - 1)
+    return render_template("index.html",
+                           posts=paginated_posts,
+                           title="discover",
+                           next_url=next_url,
+                           prev_url=prev_url
+                           )
+
+
+@app.route("/posts/top/<int:page>")  # pragma: no cover
+def top(page=1):
+    posts = Post.query.join(likes).group_by(Post). \
+        order_by(func.count(likes.c.post_id).desc())
+    per_page = app.config["POSTS_PER_PAGE"]
+    paginated_posts = posts.paginate(page, per_page)
+    next_url = url_for("top", page=page + 1)
+    prev_url = url_for("top", page=page - 1)
+    return render_template("index.html",
+                           posts=paginated_posts,
+                           title="top",
+                           next_url=next_url,
+                           prev_url=prev_url
+                           )
 
 
 @app.route("/publish", methods=["GET", "POST"])  # pragma: no cover
@@ -69,7 +97,7 @@ def publish():
 
 
 @app.route("/login", methods=["GET", "POST"])  # pragma: no cover
-@check_user_already_logged_in
+@check_user_already_logged_in  # pragma: no cover
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -91,7 +119,7 @@ def login():
 
 
 @app.route("/signup", methods=["GET", "POST"])  # pragma: no cover
-@check_user_already_logged_in
+@check_user_already_logged_in  # pragma: no cover
 def signup():
     form = SignUpForm()
     if form.validate_on_submit():
@@ -138,13 +166,17 @@ def logout():
 
 
 @app.route("/u/<username>")  # pragma: no cover
-@app.route("/u/<username>/posts")  # pragma: no cover
+@app.route("/u/<username>/posts/<int:page>")  # pragma: no cover
 @check_confirmed  # pragma: no cover
-def user_profile_posts(username):
+def user_profile_posts(username, page=1):
     # query user from the database by username
     # if user doesn't exsist throw 404 error
     user = User.query.filter_by(name=username).first_or_404()
     posts = user.posts.order_by(Post.id.desc())
+    per_page = app.config["POSTS_PER_PAGE"]
+    paginated_posts = posts.paginate(page, per_page)
+    next_url = url_for("user_profile_posts", page=page + 1, username=user.name)
+    prev_url = url_for("user_profile_posts", page=page - 1, username=user.name)
     if current_user.is_authenticated and current_user.name == user.name:
         user_profile = True
     else:
@@ -152,8 +184,10 @@ def user_profile_posts(username):
     return render_template("user_profile_posts.html",
                            user=user,
                            user_profile=user_profile,
-                           posts=posts,
-                           title=user.name
+                           posts=paginated_posts,
+                           title=user.name,
+                           next_url=next_url,
+                           prev_url=prev_url
                            )
 
 
@@ -207,6 +241,8 @@ def profile_settings(username):
         return redirect(url_for("user_profile_posts", username=user.name))
     # GET request
     if current_user.is_authenticated and current_user.name == user.name:
+        form.website.data = current_user.website
+        form.bio.data = current_user.bio
         return render_template("profile_settings.html",
                                form=form,
                                user_bio=user.bio,
@@ -241,7 +277,7 @@ def confirm_email(token):
 @login_required  # pragma: no cover
 def unconfirmed():
     if current_user.confirmed or not current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('home', page=1))
     flash('Please confirm your account', 'warning')
     return render_template('unconfirmed.html', title="unconfirmed")
 
@@ -258,36 +294,35 @@ def resend_confirmation():
     return redirect(url_for('unconfirmed'))
 
 
-@app.route("/u/<username>/follow")  # pragma: no cover
-@login_required  # pragma: no cover
-@check_confirmed  # pragma: no cover
-def follow(username):
+@app.route("/u/<username>/follow_or_unfollow", methods=["POST"]) \
+    # pragma: no cover
+def follow_or_unfollow(username):
+    msg = None
+    category = None
+    follow = False
     user = User.query.filter_by(name=username).first_or_404()
-    if current_user.is_following(user):
-        flash("you are already following {}".format(user.name), "primary")
-        return redirect(redirect_back())
+    if not current_user.is_authenticated:
+        status = "error"
+        msg = "Please Login or signup first"
+        category = "warning"
+    elif not current_user.confirmed:
+        status = "error"
+        msg = "Please confirm your email first"
+        category = "warning"
     else:
-        current_user.follow(user)
+        status = "good"
+        if not current_user.is_following(user):
+            follow = True
+            current_user.follow(user)
+        elif current_user.is_following(user):
+            current_user.unfollow(user)
         db.session.add(current_user)
         db.session.commit()
-        flash("you successfully followed {}".format(user.name), "success")
-        return redirect(redirect_back())
-
-
-@app.route("/u/<username>/unfollow")  # pragma: no cover
-@login_required  # pragma: no cover
-@check_confirmed  # pragma: no cover
-def unfollow(username):
-    user = User.query.filter_by(name=username).first_or_404()
-    if not current_user.is_following(user):
-        flash('you are not following {}'.format(user.name), "primary")
-        return redirect(redirect_back())
-    else:
-        current_user.unfollow(user)
-        db.session.add(current_user)
-        db.session.commit()
-        flash("you successfully Unfollowed {}".format(user.name), "success")
-        return redirect(redirect_back())
+    return jsonify({"status": status,
+                    "msg": msg,
+                    "category": category,
+                    "follow": follow
+                    })
 
 
 @app.route("/discover_users")  # pragma: no cover
@@ -296,3 +331,35 @@ def unfollow(username):
 def discover_users():
     users = User.query.all()
     return render_template("discover_users.html", users=users)
+
+
+@app.route("/post/<int:post_id>/like", methods=["POST"])  # pragma: no cover
+def like_post(post_id):
+    msg = None
+    like = None
+    category = None
+    post = Post.query.get(post_id)
+    if not current_user.is_authenticated:
+        status = "error"
+        msg = "Please Login or signup first"
+        category = "warning"
+    elif not current_user.confirmed:
+        status = "error"
+        msg = "Please confirm your email first"
+        category = "warning"
+    else:
+        if current_user.is_liking(post):
+            current_user.unlike(post)
+            like = False
+        else:
+            current_user.like(post)
+            like = True
+        status = "good"
+        db.session.add(current_user)
+        db.session.commit()
+    return jsonify({"status": status,
+                    "msg": msg,
+                    "category": category,
+                    "like": like,
+                    "likes_counting": post.likers.count()
+                    })

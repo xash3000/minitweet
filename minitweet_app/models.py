@@ -1,6 +1,28 @@
 # ``# pragma: no cover`` is to exclude lines from coverage test
 from . import db, bcrypt  # pragma: no cover
 
+followers = db.Table("followers",               # pragma: no cover
+                     db.Column("follower_id",
+                               db.Integer,
+                               db.ForeignKey("users.id")
+                               ),
+                     db.Column("followed_id",
+                               db.Integer,
+                               db.ForeignKey("users.id")
+                               )
+                     )
+
+likes = db.Table("likes",                       # pragma: no cover
+                 db.Column("user_id",
+                           db.Integer,
+                           db.ForeignKey("users.id")
+                           ),
+                 db.Column("post_id",
+                           db.Integer,
+                           db.ForeignKey("posts.id")
+                           ),
+                 )
+
 
 class Post(db.Model):
 
@@ -13,6 +35,13 @@ class Post(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey('users.id')) \
         # pragma: no cover
 
+    likers = db.relationship('User',  # pragma: no cover
+                             secondary=likes,
+                             backref=db.backref('liked_posts',
+                                                lazy='dynamic'),
+                             lazy='dynamic'
+                             )
+
     def __init__(self, title='', body='', author_id=1):
         self.title = title
         self.body = body
@@ -21,29 +50,6 @@ class Post(db.Model):
     def __repr__(self):
         # for debugging
         return "<Post {}>".format(self.title)
-
-
-followers = db.Table("followers",
-                     db.Column("follower_id",
-                               db.Integer,
-                               db.ForeignKey("users.id")
-                               ),
-                     db.Column("followed_id",
-                               db.Integer,
-                               db.ForeignKey("users.id")
-                               )
-                     )
-
-likes = db.Table("likes",
-                 db.Column("user_id",
-                           db.Integer,
-                           db.ForeignKey("users.id")
-                           ),
-                 db.Column("post_id",
-                           db.Integer,
-                           db.ForeignKey("posts.id")
-                           ),
-                 )
 
 
 class User(db.Model):
@@ -69,13 +75,6 @@ class User(db.Model):
                                                    lazy='dynamic'),
                                 lazy='dynamic'
                                 )
-
-    liked_posts = db.relationship('Post',  # pragma: no cover
-                                  secondary=likes,
-                                  backref=db.backref('likers',
-                                                     lazy='dynamic'),
-                                  lazy='dynamic'
-                                  )
 
     def __init__(self, name='', email='', password='',
                             bio='', website="", confirmed=False):
@@ -107,6 +106,19 @@ class User(db.Model):
         filterd = joined.filter(followers.c.follower_id == self.id)
         orderd = filterd.order_by(Post.id.desc())
         return orderd
+
+    def is_liking(self, post):
+        return self.liked_posts.filter(likes.c.post_id == post.id).count() > 0
+
+    def like(self, post):
+        if not self.is_liking(post):
+            self.liked_posts.append(post)
+            return self
+
+    def unlike(self, post):
+        if self.is_liking(post):
+            self.liked_posts.remove(post)
+            return self
 
     # =========================================#
     #  Flask-Login extension required methods #
