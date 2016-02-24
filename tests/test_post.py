@@ -1,6 +1,7 @@
 import unittest
 from base import BaseTestCase
 from minitweet_app.models import Post, User
+import json
 
 
 class TestPostViews(BaseTestCase):
@@ -57,7 +58,7 @@ class TestPostViews(BaseTestCase):
         expcected = {"status": "error",
                      "msg": "Please Login or signup first",
                      "category": "warning",
-                     "like": False,
+                     "like": None,
                      "likes_counting": test1.likers.count()
                      }
 
@@ -81,7 +82,7 @@ class TestPostViews(BaseTestCase):
         expcected = {"status": "error",
                      "msg": "Please confirm your email first",
                      "category": "warning",
-                     "like": False,
+                     "like": None,
                      "likes_counting": test1.likers.count()
                      }
 
