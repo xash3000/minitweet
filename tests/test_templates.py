@@ -52,7 +52,7 @@ class TestTemplates(BaseTestCase):
     def test_following_and_followers_page_template(self):
         with self.client:
             self.client.get("/u/admin/following")
-            self.assertTemplateUsed("following_and_followers.html")
+            self.assertTemplateUsed("user_following_and_followers.html")
 
 if __name__ == '__main__':
     unittest.main()
