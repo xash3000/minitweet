@@ -12,7 +12,12 @@ class BaseTestCase(TestCase):
         return app
 
     def setUp(self):
+        """
+        this method will execute before every test method
+        """
+        # make sure config = TestConfig
         app.config.from_object("config.TestConfig")
+        # create all tables
         db.create_all()
         self.create_user("admin",
                          "ad@min.com",
@@ -25,18 +30,30 @@ class BaseTestCase(TestCase):
         db.session.commit()
 
     def tearDown(self):
+        """
+        this method will execute after every test method
+        """
+        # make sure config = TestConfig
         app.config.from_object("config.TestConfig")
         db.session.remove()
+        # drop all tables to strart with fresh database on every test method
         db.drop_all()
 
     def create_user(self, name, email, password,
                     bio='', website="", confirmed=False):
+        """
+        helper method to create User instance and store it in the database
+        """
+        # make sure config = TestConfig
         app.config.from_object("config.TestConfig")
         u = User(name, email, password, bio, website, confirmed)
         db.session.add(u)
         db.session.commit()
 
     def login(self, name, password):
+        """
+        helper method to login users
+        """
         app.config.from_object("config.TestConfig")
         return self.client.post("/login",
                                 data=dict(username=name,
@@ -46,6 +63,9 @@ class BaseTestCase(TestCase):
                                 )
 
     def create_post(self, title, body, author_id):
+        """
+        helper method to create Post instance and store it in the database
+        """
         app.config.from_object("config.TestConfig")
         post = Post(title, body, author_id)
         db.session.add(post)

@@ -25,7 +25,7 @@ likes = db.Table("likes",                       # pragma: no cover
 
 
 class Post(db.Model):
-
+    # override the default table name
     __tablename__ = "posts"  # pragma: no cover
 
     id = db.Column(db.Integer, primary_key=True)  # pragma: no cover
@@ -35,6 +35,8 @@ class Post(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey('users.id')) \
         # pragma: no cover
 
+    # many to many relationship (Post <--> User)
+    # one post has many likers and one user has many liked posts
     likers = db.relationship('User',  # pragma: no cover
                              secondary=likes,
                              backref=db.backref('liked_posts',
@@ -62,11 +64,16 @@ class User(db.Model):
     password = db.Column(db.String, nullable=False)  # pragma: no cover
     bio = db.Column(db.String)  # pragma: no cover
     website = db.Column(db.String)  # pragma: no cover
-    # one to many relationship
+    # one to many relationship (User -> Post)
+    # one user has many posts
     posts = db.relationship("Post", backref="author", lazy="dynamic") \
         # pragma: no cover
     confirmed = db.Column(db.Boolean, nullable=False, default=False) \
         # pragma: no cover
+    #
+
+    # many to many relationship (User <--> User)
+    # one user has many following and one user has many followers
     following = db.relationship('User',  # pragma: no cover
                                 secondary=followers,
                                 primaryjoin=(followers.c.follower_id == id),
@@ -80,7 +87,7 @@ class User(db.Model):
                             bio='', website="", confirmed=False):
         self.name = name
         self.email = email
-        # generate one way hash for password
+        # generate one way hash for passwords
         self.password = bcrypt.generate_password_hash(password)
         self.bio = bio
         self.website = website

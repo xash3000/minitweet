@@ -36,8 +36,8 @@ class DevConfig(BaseConfig):
 class TestConfig(BaseConfig):
     try:
         SQLALCHEMY_DATABASE_URI = os.environ["TESTING_DATABASE"]
-    except:
-        print("you must specify testing database")
+    except KeyError:
+        raise Exception("you must specify testing database")
     TESTING = True
     WTF_CSRF_ENABLED = False
     POSTS_PER_PAGE = 3

@@ -25,11 +25,22 @@ from .decorators import check_confirmed, check_user_already_logged_in \
 @app.route("/posts")  # pragma: no cover
 @app.route("/posts/newest/<int:page>")  # pragma: no cover
 def home(page=1):
-    """ Main Page """
-    # query all posts in desceding order
+    """
+    Main Page
+    if the user is logged in show the posts from followed people
+    else show all posts
+
+    param: page -> for pagination
+    example urls:
+        /   (page=1)     # default
+        /posts  (page=1)    # default
+        /posts/newest/<page>    (page=page)
+    """
     if current_user.is_authenticated and current_user.confirmed:
+        # get posts from followed people
         posts = current_user.get_posts_from_followed_users()
     else:
+        # query all posts in desceding order
         posts = Post.query.order_by(Post.id.desc())
     per_page = app.config["POSTS_PER_PAGE"]
     paginated_posts = posts.paginate(page, per_page)
@@ -45,6 +56,12 @@ def home(page=1):
 
 @app.route("/posts/discover/<int:page>")  # pragma: no cover
 def discover(page=1):
+    """
+    show posts in random order
+    example urls:
+        /posts/discover  (page=1)    # default
+        /posts/discover/<page>  (page=page)
+    """
     posts = Post.query.order_by(func.random())
     per_page = app.config["POSTS_PER_PAGE"]
     paginated_posts = posts.paginate(page, per_page)
@@ -60,6 +77,12 @@ def discover(page=1):
 
 @app.route("/posts/top/<int:page>")  # pragma: no cover
 def top(page=1):
+    """
+    show the posts orderd by likes
+    example urls:
+        /posts/top  (page=1)    # default
+        /posts/top/<page>  (page=page)
+    """
     posts = Post.query.join(likes).group_by(Post). \
         order_by(func.count(likes.c.post_id).desc())
     per_page = app.config["POSTS_PER_PAGE"]
@@ -285,6 +308,9 @@ def unconfirmed():
 @app.route('/resend_confirmation')  # pragma: no cover
 @login_required  # pragma: no cover
 def resend_confirmation():
+    """
+    resend email confirmation to user
+    """
     token = generate_confirmation_token(current_user.email)
     confirm_url = url_for('confirm_email', token=token, _external=True)
     html = render_template('email_activate.html', confirm_url=confirm_url)
@@ -297,6 +323,15 @@ def resend_confirmation():
 @app.route("/u/<username>/follow_or_unfollow", methods=["POST"]) \
     # pragma: no cover
 def follow_or_unfollow(username):
+    """
+    like a post
+    the request will sent with ajax
+    example returned json:
+        status: either "good" or "error"
+        follow: if user follow the user follow = True else follow = None
+        msg: if there is alert msg="some alert" else msg=None
+        category: category of the msg (warning, primary, success)
+    """
     msg = None
     category = None
     follow = False
@@ -335,6 +370,15 @@ def discover_users():
 
 @app.route("/post/<int:post_id>/like", methods=["POST"])  # pragma: no cover
 def like_post(post_id):
+    """
+    like a post
+    the request will sent with ajax
+    example returned json:
+        status: either "good" or "error"
+        like: if user like the post like = True else like = None
+        msg: if there is alert msg="some alert" else msg=None
+        category: category of the msg (warning, primary, success)
+    """
     msg = None
     like = None
     category = None

@@ -3,6 +3,9 @@ from base import BaseTestCase
 
 
 class TestTemplates(BaseTestCase):
+    """
+    Ensure every view function render the correct template
+    """
 
     def test_main_page_template(self):
         with self.client:
@@ -21,12 +24,7 @@ class TestTemplates(BaseTestCase):
 
     def test_publish_page_template(self):
         with self.client:
-            self.client.post("/login",
-                             data=dict(username="admin",
-                                       password="adminpassword"
-                                       ),
-                             follow_redirects=True
-                             )
+            self.login("admin", "adminpassword")
             self.client.get("/publish")
             self.assertTemplateUsed("publish.html")
 
@@ -37,12 +35,7 @@ class TestTemplates(BaseTestCase):
 
     def test_profileSettings_page_template(self):
         with self.client:
-            self.client.post("/login",
-                             data=dict(username="admin",
-                                       password="adminpassword"
-                                       ),
-                             follow_redirects=True
-                             )
+            self.login("admin", "adminpassword")
             self.client.get("/u/admin/profile_settings")
             self.assertTemplateUsed("profile_settings.html")
 
@@ -52,15 +45,14 @@ class TestTemplates(BaseTestCase):
                              email="unconfirmed@unconfirmed.un",
                              password="unconfirmed"
                              )
-            self.client.post("/login",
-                             data=dict(username="unconfirmed_user",
-                                       password="unconfirmed"
-                                       ),
-                             follow_redirects=True
-                             )
+            self.login("unconfirmed_user", "unconfirmed")
             self.client.get("/unconfirmed")
             self.assertTemplateUsed("unconfirmed.html")
 
+    def test_following_and_followers_page_template(self):
+        with self.client:
+            self.client.get("/u/admin/following")
+            self.assertTemplateUsed("following_and_followers.html")
 
 if __name__ == '__main__':
     unittest.main()

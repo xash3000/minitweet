@@ -8,10 +8,13 @@ import json
 
 
 class TestUserMethods(BaseTestCase):
+    """
+    test methods related to the User class
+    """
 
     def test__repr__method(self):
         admin = User.query.filter_by(name="admin").first()
-        self.assertTrue(str(admin) == '<User admin>')
+        self.assertTrue(repr(admin) == '<User admin>')
 
     def test_follow_method(self):
         admin = User.query.filter_by(name="admin").first()
@@ -61,6 +64,7 @@ class TestUserMethods(BaseTestCase):
         self.create_post("test2", "test2", test_user.id)
         self.create_post("test3", "test3", test_user2.id)
         posts = admin.get_posts_from_followed_users().all()
+        # concnate test_user2 posts and test_user posts
         expcected = test_user2.posts.order_by(Post.id.desc()).all() + \
             test_user.posts.order_by(Post.id.desc()).all()
 
@@ -94,6 +98,9 @@ class TestUserMethods(BaseTestCase):
 
 
 class TestUserViews(BaseTestCase):
+    """
+    test views related to users
+    """
 
     def test_correct_login(self):
         with self.client:

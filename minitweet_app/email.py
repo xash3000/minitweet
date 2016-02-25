@@ -4,6 +4,9 @@ from . import app, mail
 
 
 def send_email(to, subject, template):
+    """
+    send email to users
+    """
     msg = Message(
         subject,
         recipients=[to],
