@@ -5,6 +5,7 @@ import unittest
 from minitweet_app import app, db
 from minitweet_app.models import User
 import coverage
+import time
 
 app.config.from_object(os.environ["CONFIG"])
 migrate = Migrate(app, db)
@@ -16,8 +17,10 @@ manager.add_command("db", MigrateCommand)
 @manager.command
 def test():
     """Runs the unit tests"""
+    t1 = time.time()
     tests = unittest.TestLoader().discover('tests')
     unittest.TextTestRunner(verbosity=2).run(tests)
+    print(time.time() - t1)
 
 
 @manager.command

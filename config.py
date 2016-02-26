@@ -34,10 +34,7 @@ class DevConfig(BaseConfig):
 
 
 class TestConfig(BaseConfig):
-    try:
-        SQLALCHEMY_DATABASE_URI = os.environ["TESTING_DATABASE"]
-    except KeyError:
-        raise Exception("you must specify testing database")
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
     TESTING = True
     WTF_CSRF_ENABLED = False
     POSTS_PER_PAGE = 3
