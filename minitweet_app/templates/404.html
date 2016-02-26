@@ -1,0 +1,23 @@
+{% extends "http_error.html" %}
+
+{% block error_msg %}
+    <h1>404</h1>
+    <h3>Page not found</h3>
+    <br>
+    <p>
+        Oops we can't seem to find this page. you may mistyped the url
+        or the page has moved to another place.
+    </p>
+
+    <p>
+        you may want to go the <a href="{{ url_for('home') }}">Home</a> page.
+        <br>
+        {% if not current_user.is_authenticated %}
+            or
+            <br>
+            <a href="{{ url_for('login')  }}">Login</a>
+            <br>
+            <a href="{{ url_for('signup')  }}">SignUp</a>
+        {% endif %}
+    </p>
+{% endblock %}

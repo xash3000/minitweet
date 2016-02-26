@@ -21,6 +21,27 @@ from .decorators import check_confirmed, check_user_already_logged_in \
     # pragma: no cover
 
 
+@app.errorhandler(404)
+# for quick access
+@app.route('/404')
+def not_found(error=404):
+    return render_template('404.html'), 404
+
+
+@app.errorhandler(500)
+# for quick access
+@app.route('/500')
+def internal_server_error(error=500):
+    return render_template('500.html'), 500
+
+
+@app.errorhandler(403)
+# for quick access
+@app.route('/403')
+def forbidden(error=500):
+    return render_template('403.html'), 403
+
+
 @app.route("/")  # pragma: no cover
 @app.route("/posts")  # pragma: no cover
 @app.route("/posts/newest/<int:page>")  # pragma: no cover

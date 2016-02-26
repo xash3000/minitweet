@@ -1,0 +1,22 @@
+{% extends "http_error.html" %}
+
+{% block error_msg %}
+    <h1>403</h1>
+    <h3>Forbidden</h3>
+    <br>
+    <p>
+        You don't have the permission to access this page
+    </p>
+
+    <p>
+        you may want to go the <a href="{{ url_for('home') }}">Home</a> page.
+        <br>
+        {% if not current_user.is_authenticated %}
+            or
+            <br>
+            <a href="{{ url_for('login')  }}">Login</a>
+            <br>
+            <a href="{{ url_for('signup')  }}">SignUp</a>
+        {% endif %}
+    </p>
+{% endblock %}

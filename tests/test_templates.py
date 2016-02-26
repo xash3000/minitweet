@@ -54,5 +54,24 @@ class TestTemplates(BaseTestCase):
             self.client.get("/u/admin/following")
             self.assertTemplateUsed("user_following_and_followers.html")
 
+    def test_404_page_template(self):
+        with self.client:
+            self.client.get("/wrong_url")
+            self.assertTemplateUsed("404.html")
+
+    def test_403_page_template(self):
+        with self.client:
+            # anonymous user can't access to other users settings
+            self.client.get("/u/admin/profile_settings")
+            self.assertTemplateUsed("403.html")
+
+    def test_500_page_template(self):
+        with self.client:
+            # currently i can't find a way to cause 500 error
+            # in the tests so i will just use /500 view
+            self.client.get('/500')
+            self.assertTemplateUsed("500.html")
+
+
 if __name__ == '__main__':
     unittest.main()
