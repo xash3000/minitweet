@@ -36,8 +36,9 @@ misaka = Misaka(app)
 class CustomAdminIndexView(AdminIndexView):
     def is_accessible(self):
         try:
-            return current_user.name == "admin"
+            return current_user.is_admin
         except AttributeError:
+            # anonymous user object doesn't have is_admin attribute
             self.inaccessible_callback()
 
     def inaccessible_callback(self, *args, **kwargs):

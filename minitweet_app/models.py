@@ -82,9 +82,10 @@ class User(db.Model):
                                                    lazy='dynamic'),
                                 lazy='dynamic'
                                 )
+    is_admin = db.Column(db.Boolean, default=False)
 
     def __init__(self, name='', email='', password='',
-                            bio='', website="", confirmed=False):
+                 bio='', website="", confirmed=False, is_admin=False):
         self.name = name
         self.email = email
         # generate one way hash for passwords
@@ -92,6 +93,7 @@ class User(db.Model):
         self.bio = bio
         self.website = website
         self.confirmed = confirmed
+        self.is_admin = is_admin
 
     def follow(self, user):
         if not self.is_following(user):
