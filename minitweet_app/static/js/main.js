@@ -68,4 +68,12 @@ $(document).ready(function() {
             $(".flashed-alert").fadeOut('slow');
         }, 3000)
     })
+
+    $('#back-to-top').on('click', function (e) {
+        e.preventDefault();
+        $('html,body').animate({
+            scrollTop: 0
+        }, 800);
+    });
+
 })
