@@ -9,7 +9,7 @@ from flask.ext.mail import Mail
 from flask.ext.misaka import Misaka
 from flask.ext.admin import Admin, AdminIndexView
 from flask.ext.admin.contrib.sqla import ModelView
-
+from flask.ext.compress import Compress
 
 app = Flask(__name__)
 app.config.from_object(os.environ["CONFIG"])
@@ -54,6 +54,8 @@ from .models import User, Post
 
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Post, db.session))
+
+Compress(app)
 
 
 @login_manager.user_loader
