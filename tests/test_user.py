@@ -1,9 +1,8 @@
 import unittest
 from base import BaseTestCase
-from minitweet_app.models import User
 from flask.ext.login import current_user
 from flask import request
-from minitweet_app.models import Post
+from minitweet_app.shared.models import Post, User
 import json
 
 

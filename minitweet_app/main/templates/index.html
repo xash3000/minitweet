@@ -7,7 +7,7 @@
         <div class="alert alert-success text-center static-alert">
             <span class="msg">
                 welcome to minitweet a twitter clone with minimal features
-                <a href="{{ url_for('signup') }}"><span class="alert-link">signup now!</span></a>
+                <a href="{{ url_for('auth.signup') }}"><span class="alert-link">signup now!</span></a>
             </span>
         </div>
     {% endif %}
@@ -23,19 +23,19 @@
 
     <ul class="nav nav-tabs col-xs-12 col-md-8 col-md-offset-2">
         <li role="presentation" class='{{ newest }}'>
-            <a href="{{ url_for('home', page=1) }}">
+            <a href="{{ url_for('main.home', page=1) }}">
                 <i class="fa fa-clock-o"></i> newest
             </a>
         </li>
 
         <li role="presentation" class="{{ top }}">
-            <a href="{{ url_for('top', page=1) }}">
+            <a href="{{ url_for('posts.top', page=1) }}">
                 <i class="fa fa-heart"></i> Top
             </a>
         </li>
 
         <li role="presentation" class="{{ discover }}">
-            <a href="{{ url_for('discover', page=1) }}">
+            <a href="{{ url_for('posts.discover', page=1) }}">
                 <i class="fa fa-binoculars"></i> discover
             </a>
         </li>

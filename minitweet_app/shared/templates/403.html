@@ -9,14 +9,14 @@
     </p>
 
     <p>
-        you may want to go the <a href="{{ url_for('home') }}">Home</a> page.
+        you may want to go the <a href="{{ url_for('main.home') }}">Home</a> page.
         <br>
         {% if not current_user.is_authenticated %}
             or
             <br>
-            <a href="{{ url_for('login')  }}">Login</a>
+            <a href="{{ url_for('auth.login')  }}">Login</a>
             <br>
-            <a href="{{ url_for('signup')  }}">SignUp</a>
+            <a href="{{ url_for('auth.signup')  }}">SignUp</a>
         {% endif %}
     </p>
 {% endblock %}

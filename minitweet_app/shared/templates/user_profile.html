@@ -19,7 +19,7 @@
         {% endif %}
         {% if current_user.is_authenticated%}
             {% if user_profile %}
-                <a href="{{ url_for('profile_settings', username=user.name) }}">
+                <a href="{{ url_for('users.profile_settings', username=user.name) }}">
                     change your profile settings
                 </a>
             {% else %}

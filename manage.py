@@ -3,7 +3,7 @@ from flask.ext.migrate import Migrate, MigrateCommand
 import os
 import unittest
 from minitweet_app import app, db
-from minitweet_app.models import User
+from minitweet_app.shared.models import User
 import coverage
 import time
 

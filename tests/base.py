@@ -1,7 +1,7 @@
 from flask.ext.testing import TestCase
 from minitweet_app import app, db
 import os
-from minitweet_app.models import User, Post
+from minitweet_app.shared.models import User, Post
 
 
 class BaseTestCase(TestCase):

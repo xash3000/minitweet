@@ -20,7 +20,7 @@ def check_confirmed(func):
         # don't redirect not logged in users
         if current_user.is_authenticated:
             if current_user.confirmed is False:
-                return redirect(url_for('unconfirmed'))
+                return redirect(url_for('auth.unconfirmed'))
         return func(*args, **kwargs)
     return decorated_function  # pragma: no cover
 
@@ -33,6 +33,6 @@ def check_user_already_logged_in(func):
     def decorated_function(*args, **kwargs):
         if current_user.is_authenticated:
                 flash("You are already logged in", "primary")
-                return redirect(url_for('home'))
+                return redirect(url_for('main.home'))
         return func(*args, **kwargs)
     return decorated_function  # pragma: no cover
