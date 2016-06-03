@@ -54,7 +54,7 @@ def profile_settings(username):
         user.website = form.website.data
         db.session.add(user)
         db.session.commit()
-        flash("new settings were successfully changed", "success")
+        flash("new settings were successfully applied", "success")
         view = "posts.user_profile_posts"
         return redirect(url_for(view, username=user.name))
     # GET request
