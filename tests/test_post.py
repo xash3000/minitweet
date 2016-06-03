@@ -1,6 +1,6 @@
 import unittest
 from base import BaseTestCase
-from minitweet_app.models import Post, User
+from minitweet_app.shared.models import Post, User
 import json
 
 

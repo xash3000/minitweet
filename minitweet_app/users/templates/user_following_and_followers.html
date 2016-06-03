@@ -4,12 +4,12 @@
 {% if followers %}
 <ul class="nav nav-tabs col-xs-12 col-md-8 col-md-offset-2">
     <li role="presentation">
-        <a href="{{ url_for('user_profile_posts', username=user.name) }}">
+        <a href="{{ url_for('posts.user_profile_posts', username=user.name) }}">
             {{ user.posts.count() }} posts
         </a>
     </li>
     <li role="presentation">
-        <a href="{{ url_for('following', username=user.name) }}">
+        <a href="{{ url_for('users.following', username=user.name) }}">
             <!--
                 minus one because every user is following himself by deafult
             -->
@@ -17,7 +17,7 @@
         </a>
     </li>
     <li role="presentation" class="active">
-        <a href="{{ url_for('followers', username=user.name) }}">
+        <a href="{{ url_for('users.followers', username=user.name) }}">
             <!--
                 minus one because every user is following himself by deafult
             -->
@@ -28,12 +28,12 @@
 {% else %}
 <ul class="nav nav-tabs col-xs-12 col-md-8 col-md-offset-2">
     <li role="presentation">
-        <a href="{{ url_for('user_profile_posts', username=user.name) }}">
+        <a href="{{ url_for('posts.user_profile_posts', username=user.name) }}">
             {{ user.posts.count() }} posts
         </a>
     </li>
     <li role="presentation" class="active">
-        <a href="{{ url_for('following', username=user.name) }}">
+        <a href="{{ url_for('users.following', username=user.name) }}">
             <!--
                 minus one because every user is following himself by deafult
             -->
@@ -41,7 +41,7 @@
         </a>
     </li>
     <li role="presentation">
-        <a href="{{ url_for('followers', username=user.name) }}">
+        <a href="{{ url_for('users.followers', username=user.name) }}">
             <!--
                 minus one because every user is following himself by deafult
             -->
